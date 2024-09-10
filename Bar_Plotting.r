@@ -223,7 +223,27 @@ p4 = ggplot(data = dat1,
 p4
 
 
+#基于算好的均值标准差直接作图
+# 创建示例数据
+mycolors <-c('#4DBBD4','#E64A35' )
+datafig <- data.frame(
+  group = rep(c('Resting', 'Hearing self'), each=1),
+  mean_value = c(0.553, 0.521),  
+  sd_value = c(0.097,0.121)    
+)
 
+# 绘制图形
+p1 <- ggplot(data = datafig, aes(x = factor(group), y = mean_value, fill = group)) +
+  geom_bar(stat = "identity", width = 0.7, colour = "black", size = 0.9) +  # 使用身份统计，因为y轴是直接从数据中来的
+  geom_errorbar(aes(ymin = mean_value - sd_value, ymax = mean_value + sd_value),  # 添加误差线
+                width = 0.4, size = 0.9) +
+  theme_prism()+
+  theme(axis.text.x = element_text(angle = 45)) +  # 注意这里使用了element_text代替了axis_text_angle
+  theme(legend.direction = "horizontal") +  # 将图例放置在底部
+  coord_cartesian(ylim = c(0, 0.8)) +
+  scale_fill_manual(values = mycolors) +
+  labs(x = "Condition", y = "Coherence")
+p1
 
 
 

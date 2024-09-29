@@ -25,6 +25,31 @@ m1 = MANOVA(data, dvs = "C1FC01:C5FC66", dvs.pattern = "C(.)FC(..)", between = "
 emmip(m1, Group ~ Condition, CIs=TRUE, xlab = "Condition",ylab = "IBS")
 emmip(m1, Group ~ Condition | IBS, CIs=TRUE)
 
+#作图
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+library(readxl)
+library(ggprism)
+data <- read_excel("C:/Users/ASUS/Desktop/SCZ_tACS/data/IBS/statistic/IBS.xlsx")
+data_long <- pivot_longer(data, cols = c('C1FC22','C2FC22','C3FC22','C4FC22','C5FC22'), names_to = "Condition", values_to = "IBS")
+data_long$Group <- factor(data_long$Group, labels = c("SZ", "HC"))
+data_long$Condition <- factor(data_long$Condition, labels = c("Resting state", "Hearing self", "Hearing each other", "Hearing healthy", "Healthy patient"))
+summary_data <- data_long %>%
+  group_by(Condition, Group) %>%
+  summarise(Mean_IBS = mean(IBS, na.rm = TRUE), SD_IBS = sd(IBS, na.rm = TRUE)) %>%
+  ungroup()
+ggplot(summary_data, aes(x = Condition, y = Mean_IBS, fill = Group)) +
+  geom_bar(stat = "identity", position = position_dodge(), width = 0.7) +
+  geom_errorbar(aes(ymin = Mean_IBS - SD_IBS, ymax = Mean_IBS + SD_IBS), size = 0.7, width = 0.2, position = position_dodge(0.7)) +
+  labs(x = "Condition", y = "RM-RDLPFC", fill = "Group") +
+  theme_minimal() +
+  scale_fill_manual(values = c("#EE7D80","#D3D3D3")) +  # 设置颜色
+  theme_prism(axis_text_angle = 45) + 
+  coord_cartesian(ylim = c(0, 0.8)) +
+  theme(axis.title.x = element_text(size = 14), axis.text.x = element_text(size = 12)) # 改变轴标签字体大小
+
+
 m2 = MANOVA(data, dvs = "C1FC01:C5FC66", dvs.pattern = "C(.)FC(..)", between = "Group",
         within = c("Condition", "IBS"), covariate = "GMrest",
         ss.type = "III", sph.correction = "GG", aov.include = FALSE, digits = 3,

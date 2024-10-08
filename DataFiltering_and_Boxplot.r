@@ -1,5 +1,8 @@
 library(ggplot2)
 library(reshape2)
+library(dplyr)
+
+#去除异常值，作图SZconsistency
 data <- data.frame(
   S07221 = c(0.56, 0.44, 0.70, 0.61, 0.31, 0.15, 0.27, 0.31),
   S07291 = c(0.31, 0.14, 0.19, 0.41, 0.25, 0.14, 0.15, 0.33),
@@ -13,8 +16,42 @@ data <- data.frame(
   S10221 = c(0.70, 0.51, 0.76, 0.63, 0.16, 0.30, 0.44, 0.29),
   S11151 = c(0.52, 0.49, 0.47, 0.34, 0.21, 0.56, 0.24, 0.32),
   S11161 = c(0.59, 0.80, 0.21, 0.49, 0.82, 0.60, 0.86, 0.07),
-  S11162 = c(0.44, 0.51, 0.61, 0.30, 0.33, 0.34, 0.29, 0.40)
-)
+  S11162 = c(0.44, 0.51, 0.61, 0.30, 0.33, 0.34, 0.29, 0.40),
+  S08031 = c(0.34, 0.24, 0.36, 0.37, 0.32, 0.35, 0.17, 0.26),
+  S09192 = c(0.30, 0.15, 0.40, 0.21, 0.45, 0.42, 0.65, 0.73),
+  S08171 = c(0.21, 0.16, 0.11, 0.65, 0.03, 0.50, 0.28, 0.07),
+  S09171 = c(0.33, 0.63, 0.37, 0.05, 0.65, 0.20, 0.13, 0.37))
+statistic <- matrix(nrow = ncol(data), ncol = 2)
+colnames(statistic) <- c("Mean", "Variance")
+for (i in 1:ncol(data)) {
+  current_data <- data[, i]
+  mad_value <- mad(current_data, constant = 1)  # 使用constant = 1来得到原始MAD
+  threshold <- 3 * mad_value  # 定义异常值的阈值，N倍的MAD
+  median_data <- median(current_data, na.rm = TRUE)   # 计算数据与中位数的绝对偏差
+  abs_devs <- abs(current_data - median_data)
+  non_outliers_indices <- which(abs_devs <= threshold)
+  data[setdiff(1:nrow(data), non_outliers_indices), i] <- NA
+  mean_non_outliers <- mean(current_data, na.rm = TRUE)
+  var_non_outliers <- var(current_data, na.rm = TRUE)
+  statistic[i, ] <- c(mean_non_outliers, var_non_outliers)}
+
+data_long <- melt(data)
+data_long <- data_long %>%
+  mutate(group = ifelse(variable %in% colnames(data)[1:13], "Group1", "Group2"))
+p <- ggplot(data_long, aes(x = variable, y = value, fill = group)) +
+  geom_boxplot(width = 0.6, outlier.shape = NA, lwd = 0.8, fatten = 1.5) + # 调整箱子宽度和误差线粗细
+  scale_fill_manual(values = c("Group1" = "#4DBBD4", "Group2" = "#E64A35"), guide = FALSE) + # 蓝色#4DBBD4  HC绿色为#01A187
+  xlab("") + ylab("Consistency") + # 设置坐标轴标题
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), # 横坐标标签倾斜45度
+        axis.title.y = element_text(size = 14, face = "bold"), # 加粗纵坐标标题
+        plot.title = element_text(hjust = 0.5), # 居中标题
+        legend.position = "none", # 移除图例
+        panel.grid.major = element_blank(), # 移除主要网格线
+        panel.grid.minor = element_blank(), # 移除次要网格线
+        panel.background = element_rect(fill = "white", colour = "grey50")) # 白色背景
+print(p)
+
+#去除异常值，作图HCconsistency
 data <- data.frame(
   S07242 = c(0.77, 0.72, 0.35, 0.72, 0.62, 0.90, 0.71, 0.89),
   S07262 = c(0.85, 0.69, 0.78, 0.80, 0.92, 0.71, 0.42, 0.55),
@@ -29,8 +66,21 @@ data <- data.frame(
   S09244 = c(0.82, 0.80, 0.57, 0.66, 0.34, 0.68, 0.40, 0.29),
   S09246 = c(0.31, 0.14, 0.73, 0.83, 0.46, 0.73, 0.64, 0.62),
   S08051 = c(0.33, 0.58, 0.71, 0.81, 0.84, 0.41, 0.62, 0.86),
-  S08072 = c(0.63, 0.91, 0.90, 0.61, 0.83, 0.67, 0.43, 0.74)
-)
+  S08072 = c(0.63, 0.91, 0.90, 0.61, 0.83, 0.67, 0.43, 0.74))
+statistic <- matrix(nrow = ncol(data), ncol = 2)
+colnames(statistic) <- c("Mean", "Variance")
+for (i in 1:ncol(data)) {
+  current_data <- data[, i]
+  mad_value <- mad(current_data, constant = 1)  # 使用constant = 1来得到原始MAD
+  threshold <- 3 * mad_value  # 定义异常值的阈值，N倍的MAD
+  median_data <- median(current_data, na.rm = TRUE)   # 计算数据与中位数的绝对偏差
+  abs_devs <- abs(current_data - median_data)
+  non_outliers_indices <- which(abs_devs <= threshold)
+  data[setdiff(1:nrow(data), non_outliers_indices), i] <- NA
+  mean_non_outliers <- mean(current_data, na.rm = TRUE)
+  var_non_outliers <- var(current_data, na.rm = TRUE)
+  statistic[i, ] <- c(mean_non_outliers, var_non_outliers)}
+
 data_long <- melt(data)
 p <- ggplot(data_long, aes(x = variable, y = value, fill = "all_boxes")) +
   geom_boxplot(width = 0.6, outlier.shape = NA, lwd = 0.8, fatten = 1.5) + # 调整箱子宽度和误差线粗细
@@ -45,6 +95,9 @@ p <- ggplot(data_long, aes(x = variable, y = value, fill = "all_boxes")) +
         panel.background = element_rect(fill = "white", colour = "grey50")) # 白色背景
 print(p)
 
+
+
+#去除异常值，作图SZstablity
 data <- data.frame(
   S07221 = c(0.0349, 0.0816, 0.1039, 0.0935, 0.0919, 0.0862, 0.1094, 0.1351),
   S07291 = c(0.0855, 0.0596, 0.0534, 0.0968, 0.0319, 0.0976, 0.0642, 0.1387),
@@ -59,7 +112,42 @@ data <- data.frame(
   S11151 = c(0.1102, 0.0822, 0.0736, 0.1351, 0.1388, 0.1022, 0.1209, 0.0917),
   S11161 = c(0.1346, 0.1472, 0.1289, 0.1137, 0.1494, 0.1123, 0.1193, 0.1299),
   S11162 = c(0.1553, 0.1400, 0.1611, 0.1478, 0.1502, 0.1348, 0.1247, 0.1310)
-)
+  S08031 = c(0.0976 ,0.1088 ,0.1354 ,0.0641 ,0.1155 ,0.0502 ,0.1430 ,0.1246 ),
+  S09192 = c(0.0752 ,0.0771 ,0.0951 ,0.0953 ,0.0479 ,0.1042 ,0.1101 ,0.1031 ),
+  S08171 = c(0.1073 ,0.1027 ,0.1436 ,0.0954 ,0.1342 ,0.1083 ,0.1351 ,0.1585 ),
+  S09171 = c(0.1226 ,0.1718 ,0.1347 ,0.1256 ,0.1155 ,0.1244 ,0.1376 ,0.1417 ))
+statistic <- matrix(nrow = ncol(data), ncol = 2)
+colnames(statistic) <- c("Mean", "Variance")
+for (i in 1:ncol(data)) {
+  current_data <- data[, i]
+  mad_value <- mad(current_data, constant = 1)  # 使用constant = 1来得到原始MAD
+  threshold <- 3 * mad_value  # 定义异常值的阈值，N倍的MAD
+  median_data <- median(current_data, na.rm = TRUE)   # 计算数据与中位数的绝对偏差
+  abs_devs <- abs(current_data - median_data)
+  non_outliers_indices <- which(abs_devs <= threshold)
+  data[setdiff(1:nrow(data), non_outliers_indices), i] <- NA
+  mean_non_outliers <- mean(current_data, na.rm = TRUE)
+  var_non_outliers <- var(current_data, na.rm = TRUE)
+  statistic[i, ] <- c(mean_non_outliers, var_non_outliers)}
+
+data_long <- melt(data)
+data_long <- data_long %>%
+  mutate(group = ifelse(variable %in% colnames(data)[1:13], "Group1", "Group2"))
+p <- ggplot(data_long, aes(x = variable, y = value, fill = group)) +
+  geom_boxplot(width = 0.6, outlier.shape = NA, lwd = 0.8, fatten = 1.5) + # 调整箱子宽度和误差线粗细
+  scale_fill_manual(values = c("Group1" = "#4DBBD4", "Group2" = "#E64A35"), guide = FALSE) + # 蓝色#4DBBD4  HC绿色为#01A187
+  xlab("") + ylab("Consistency") + # 设置坐标轴标题
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), # 横坐标标签倾斜45度
+        axis.title.y = element_text(size = 14, face = "bold"), # 加粗纵坐标标题
+        plot.title = element_text(hjust = 0.5), # 居中标题
+        legend.position = "none", # 移除图例
+        panel.grid.major = element_blank(), # 移除主要网格线
+        panel.grid.minor = element_blank(), # 移除次要网格线
+        panel.background = element_rect(fill = "white", colour = "grey50")) # 白色背景
+print(p)
+
+
+#去除异常值，作图HCstablity
 data <- data.frame(
   S07242 = c(0.0885, 0.0850, 0.0856, 0.0953, 0.0723, 0.0931, 0.0938, 0.0946),
   S07262 = c(0.1002, 0.1070, 0.1671, 0.1410, 0.1200, 0.1183, 0.1532, 0.1330),
@@ -74,8 +162,20 @@ data <- data.frame(
   S09244 = c(0.1357, 0.1344, 0.1417, 0.1353, 0.1381, 0.1289, 0.0986, 0.1250),
   S09246 = c(0.1479, 0.1380, 0.1239, 0.1506, 0.1303, 0.1546, 0.1433, 0.1510),
   S08051 = c(0.1105, 0.1501, 0.1439, 0.1447, 0.1112, 0.1109, 0.1636, 0.0891),
-  S08072 = c(0.0990, 0.0589, 0.1120, 0.0977, 0.1148, 0.1706, 0.1354, 0.1065)
-)
+  S08072 = c(0.0990, 0.0589, 0.1120, 0.0977, 0.1148, 0.1706, 0.1354, 0.1065))
+statistic <- matrix(nrow = ncol(data), ncol = 2)
+colnames(statistic) <- c("Mean", "Variance")
+for (i in 1:ncol(data)) {
+  current_data <- data[, i]
+  mad_value <- mad(current_data, constant = 1)  # 使用constant = 1来得到原始MAD
+  threshold <- 3 * mad_value  # 定义异常值的阈值，N倍的MAD
+  median_data <- median(current_data, na.rm = TRUE)   # 计算数据与中位数的绝对偏差
+  abs_devs <- abs(current_data - median_data)
+  non_outliers_indices <- which(abs_devs <= threshold)
+  data[setdiff(1:nrow(data), non_outliers_indices), i] <- NA
+  mean_non_outliers <- mean(current_data, na.rm = TRUE)
+  var_non_outliers <- var(current_data, na.rm = TRUE)
+  statistic[i, ] <- c(mean_non_outliers, var_non_outliers)}
 data_long <- melt(data)
 p <- ggplot(data_long, aes(x = variable, y = value, fill = "all_boxes")) +
   geom_boxplot(width = 0.6, outlier.shape = NA, lwd = 0.8, fatten = 1.5) + # 调整箱子宽度和误差线粗细
@@ -91,7 +191,7 @@ p <- ggplot(data_long, aes(x = variable, y = value, fill = "all_boxes")) +
 print(p)
 
 
-
+#下面是肖师姐做的图
 library('ggplot2')
 library(ggalt)
 library(reshape2)

@@ -124,7 +124,7 @@ data_long <- data_long %>%
 p <- ggplot(data_long, aes(x = variable, y = value, fill = group)) +
   geom_boxplot(width = 0.6, outlier.shape = NA, lwd = 0.8, fatten = 1.5) + # 调整箱子宽度和误差线粗细
   scale_fill_manual(values = c("Group1" = "#4DBBD4", "Group2" = "#E64A35"), guide = FALSE) + # 蓝色#4DBBD4  HC绿色为#01A187
-  xlab("") + ylab("Consistency") + # 设置坐标轴标题
+  xlab("") + ylab("Stability") + # 设置坐标轴标题
   theme(axis.text.x = element_text(angle = 45, hjust = 1), # 横坐标标签倾斜45度
         axis.title.y = element_text(size = 14, face = "bold"), # 加粗纵坐标标题
         plot.title = element_text(hjust = 0.5), # 居中标题

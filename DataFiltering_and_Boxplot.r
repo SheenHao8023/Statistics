@@ -25,15 +25,11 @@ statistic <- matrix(nrow = ncol(data), ncol = 2)
 colnames(statistic) <- c("Mean", "Variance")
 for (i in 1:ncol(data)) {
   current_data <- data[, i]
-  mad_value <- mad(current_data, constant = 1)  # 使用constant = 1来得到原始MAD
-  threshold <- 3 * mad_value  # 定义异常值的阈值，N倍的MAD
-  median_data <- median(current_data, na.rm = TRUE)   # 计算数据与中位数的绝对偏差
-  abs_devs <- abs(current_data - median_data)
-  non_outliers_indices <- which(abs_devs <= threshold)
-  data[setdiff(1:nrow(data), non_outliers_indices), i] <- NA
-  mean_non_outliers <- mean(current_data, na.rm = TRUE)
-  var_non_outliers <- var(current_data, na.rm = TRUE)
-  statistic[i, ] <- c(mean_non_outliers, var_non_outliers)}
+  threshold <- 3 * mad(current_data, constant = 1)  # 使用constant = 1来得到原始MAD,定义异常值的阈值，N倍的MAD
+  abs_devs <- abs(current_data - median(current_data, na.rm = TRUE))
+  non_outliers_data <- current_data[which(abs_devs <= threshold)]
+  data[setdiff(1:nrow(data), which(abs_devs <= threshold)), i] <- NA
+  statistic[i, ] <- c(mean(non_outliers_data, na.rm = TRUE), var(non_outliers_data, na.rm = TRUE))}
 
 data_long <- melt(data)
 data_long <- data_long %>%
@@ -71,15 +67,11 @@ statistic <- matrix(nrow = ncol(data), ncol = 2)
 colnames(statistic) <- c("Mean", "Variance")
 for (i in 1:ncol(data)) {
   current_data <- data[, i]
-  mad_value <- mad(current_data, constant = 1)  # 使用constant = 1来得到原始MAD
-  threshold <- 3 * mad_value  # 定义异常值的阈值，N倍的MAD
-  median_data <- median(current_data, na.rm = TRUE)   # 计算数据与中位数的绝对偏差
-  abs_devs <- abs(current_data - median_data)
-  non_outliers_indices <- which(abs_devs <= threshold)
-  data[setdiff(1:nrow(data), non_outliers_indices), i] <- NA
-  mean_non_outliers <- mean(current_data, na.rm = TRUE)
-  var_non_outliers <- var(current_data, na.rm = TRUE)
-  statistic[i, ] <- c(mean_non_outliers, var_non_outliers)}
+  threshold <- 3 * mad(current_data, constant = 1)  # 使用constant = 1来得到原始MAD,定义异常值的阈值，N倍的MAD
+  abs_devs <- abs(current_data - median(current_data, na.rm = TRUE))
+  non_outliers_data <- current_data[which(abs_devs <= threshold)]
+  data[setdiff(1:nrow(data), which(abs_devs <= threshold)), i] <- NA
+  statistic[i, ] <- c(mean(non_outliers_data, na.rm = TRUE), var(non_outliers_data, na.rm = TRUE))}
 
 data_long <- melt(data)
 p <- ggplot(data_long, aes(x = variable, y = value, fill = "all_boxes")) +
@@ -120,15 +112,11 @@ statistic <- matrix(nrow = ncol(data), ncol = 2)
 colnames(statistic) <- c("Mean", "Variance")
 for (i in 1:ncol(data)) {
   current_data <- data[, i]
-  mad_value <- mad(current_data, constant = 1)  # 使用constant = 1来得到原始MAD
-  threshold <- 3 * mad_value  # 定义异常值的阈值，N倍的MAD
-  median_data <- median(current_data, na.rm = TRUE)   # 计算数据与中位数的绝对偏差
-  abs_devs <- abs(current_data - median_data)
-  non_outliers_indices <- which(abs_devs <= threshold)
-  data[setdiff(1:nrow(data), non_outliers_indices), i] <- NA
-  mean_non_outliers <- mean(current_data, na.rm = TRUE)
-  var_non_outliers <- var(current_data, na.rm = TRUE)
-  statistic[i, ] <- c(mean_non_outliers, var_non_outliers)}
+  threshold <- 3 * mad(current_data, constant = 1)  # 使用constant = 1来得到原始MAD,定义异常值的阈值，N倍的MAD
+  abs_devs <- abs(current_data - median(current_data, na.rm = TRUE))
+  non_outliers_data <- current_data[which(abs_devs <= threshold)]
+  data[setdiff(1:nrow(data), which(abs_devs <= threshold)), i] <- NA
+  statistic[i, ] <- c(mean(non_outliers_data, na.rm = TRUE), var(non_outliers_data, na.rm = TRUE))}
 
 data_long <- melt(data)
 data_long <- data_long %>%
@@ -167,15 +155,11 @@ statistic <- matrix(nrow = ncol(data), ncol = 2)
 colnames(statistic) <- c("Mean", "Variance")
 for (i in 1:ncol(data)) {
   current_data <- data[, i]
-  mad_value <- mad(current_data, constant = 1)  # 使用constant = 1来得到原始MAD
-  threshold <- 3 * mad_value  # 定义异常值的阈值，N倍的MAD
-  median_data <- median(current_data, na.rm = TRUE)   # 计算数据与中位数的绝对偏差
-  abs_devs <- abs(current_data - median_data)
-  non_outliers_indices <- which(abs_devs <= threshold)
-  data[setdiff(1:nrow(data), non_outliers_indices), i] <- NA
-  mean_non_outliers <- mean(current_data, na.rm = TRUE)
-  var_non_outliers <- var(current_data, na.rm = TRUE)
-  statistic[i, ] <- c(mean_non_outliers, var_non_outliers)}
+  threshold <- 3 * mad(current_data, constant = 1)  # 使用constant = 1来得到原始MAD,定义异常值的阈值，N倍的MAD
+  abs_devs <- abs(current_data - median(current_data, na.rm = TRUE))
+  non_outliers_data <- current_data[which(abs_devs <= threshold)]
+  data[setdiff(1:nrow(data), which(abs_devs <= threshold)), i] <- NA
+  statistic[i, ] <- c(mean(non_outliers_data, na.rm = TRUE), var(non_outliers_data, na.rm = TRUE))}
 data_long <- melt(data)
 p <- ggplot(data_long, aes(x = variable, y = value, fill = "all_boxes")) +
   geom_boxplot(width = 0.6, outlier.shape = NA, lwd = 0.8, fatten = 1.5) + # 调整箱子宽度和误差线粗细

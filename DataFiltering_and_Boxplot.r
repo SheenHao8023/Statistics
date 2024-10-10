@@ -21,6 +21,9 @@ data <- data.frame(
   S09192 = c(0.30, 0.15, 0.40, 0.21, 0.45, 0.42, 0.65, 0.73),
   S08171 = c(0.21, 0.16, 0.11, 0.65, 0.03, 0.50, 0.28, 0.07),
   S09171 = c(0.33, 0.63, 0.37, 0.05, 0.65, 0.20, 0.13, 0.37))
+statistic_raw <- matrix(nrow = ncol(data), ncol = 2) #原始数据的均值方差
+for (j in 1:ncol(data)) {
+  statistic_raw[j, ] <- c(mean(data[, j], na.rm = TRUE), var(data[, j], na.rm = TRUE))}
 statistic <- matrix(nrow = ncol(data), ncol = 2)
 colnames(statistic) <- c("Mean", "Variance")
 for (i in 1:ncol(data)) {
@@ -63,6 +66,9 @@ data <- data.frame(
   S09246 = c(0.31, 0.14, 0.73, 0.83, 0.46, 0.73, 0.64, 0.62),
   S08051 = c(0.33, 0.58, 0.71, 0.81, 0.84, 0.41, 0.62, 0.86),
   S08072 = c(0.63, 0.91, 0.90, 0.61, 0.83, 0.67, 0.43, 0.74))
+statistic_raw <- matrix(nrow = ncol(data), ncol = 2) #原始数据的均值方差
+for (j in 1:ncol(data)) {
+  statistic_raw[j, ] <- c(mean(data[, j], na.rm = TRUE), var(data[, j], na.rm = TRUE))}
 statistic <- matrix(nrow = ncol(data), ncol = 2)
 colnames(statistic) <- c("Mean", "Variance")
 for (i in 1:ncol(data)) {
@@ -108,6 +114,9 @@ data <- data.frame(
   S09192 = c(0.0752 ,0.0771 ,0.0951 ,0.0953 ,0.0479 ,0.1042 ,0.1101 ,0.1031 ),
   S08171 = c(0.1073 ,0.1027 ,0.1436 ,0.0954 ,0.1342 ,0.1083 ,0.1351 ,0.1585 ),
   S09171 = c(0.1226 ,0.1718 ,0.1347 ,0.1256 ,0.1155 ,0.1244 ,0.1376 ,0.1417 ))
+statistic_raw <- matrix(nrow = ncol(data), ncol = 2) #原始数据的均值方差
+for (j in 1:ncol(data)) {
+  statistic_raw[j, ] <- c(mean(data[, j], na.rm = TRUE), var(data[, j], na.rm = TRUE))}
 statistic <- matrix(nrow = ncol(data), ncol = 2)
 colnames(statistic) <- c("Mean", "Variance")
 for (i in 1:ncol(data)) {
@@ -151,6 +160,9 @@ data <- data.frame(
   S09246 = c(0.1479, 0.1380, 0.1239, 0.1506, 0.1303, 0.1546, 0.1433, 0.1510),
   S08051 = c(0.1105, 0.1501, 0.1439, 0.1447, 0.1112, 0.1109, 0.1636, 0.0891),
   S08072 = c(0.0990, 0.0589, 0.1120, 0.0977, 0.1148, 0.1706, 0.1354, 0.1065))
+statistic_raw <- matrix(nrow = ncol(data), ncol = 2) #原始数据的均值方差
+for (j in 1:ncol(data)) {
+  statistic_raw[j, ] <- c(mean(data[, j], na.rm = TRUE), var(data[, j], na.rm = TRUE))}
 statistic <- matrix(nrow = ncol(data), ncol = 2)
 colnames(statistic) <- c("Mean", "Variance")
 for (i in 1:ncol(data)) {

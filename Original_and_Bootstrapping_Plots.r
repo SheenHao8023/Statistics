@@ -35,7 +35,7 @@ ci <- boot.ci(results, type = "perc") # 使用百分位数法计算CI
 cat("95% 置信区间为:", ci$perc[4:5], "\n", "均值为：", mean(results$t)) # 输出置信区间
 hist(results$t,  main = "Distribution of Resampling", # 绘制Bootstrap分布及均值置信区间
     xlab = "Consistency", ylab = "Probability Density", 
-    freq = FALSE, breaks = seq(0, 1.0, by=0.05), xlim = c(0, 1.0), ylim = c(0, 7))
+    freq = FALSE, breaks = seq(0, 1.0, by=0.05), xlim = c(0, 1.0), ylim = c(0, 10))
 abline(v = ci$percent[4], lty=1, col="red", lwd=2)
 abline(v = ci$percent[5], lty=1, col="red", lwd=2)
 abline(v = mean(results$t), lty=2, col="blue", lwd=2)
@@ -49,7 +49,7 @@ ci <- boot.ci(results, type = "perc") # 使用百分位数法计算CI
 cat("95% 置信区间为:", ci$perc[4:5], "\n", "均值为：", mean(results$t)) # 输出置信区间
 hist(results$t,  main = "Distribution of Resampling", 
      xlab = "Stability", ylab = "Probability Density", 
-     freq = FALSE, breaks = seq(0, 1.0, by=0.05), xlim = c(0, 1.0), ylim = c(0, 7))
+     freq = FALSE, breaks = seq(0, 1.0, by=0.05), xlim = c(0, 1.0), ylim = c(0, 10))
 abline(v = ci$percent[4], lty=1, col="red", lwd=2)
 abline(v = ci$percent[5], lty=1, col="red", lwd=2)
 abline(v = mean(results$t), lty=2, col="blue", lwd=2)
@@ -91,7 +91,7 @@ ci <- boot.ci(results, type = "perc") # 使用百分位数法计算CI
 cat("95% 置信区间为:", ci$perc[4:5], "\n", "均值为：", mean(results$t)) # 输出置信区间
 hist(results$t,  main = "Distribution of Resampling", # 绘制Bootstrap分布及均值置信区间
     xlab = "Consistency", ylab = "Probability Density", 
-    freq = FALSE, breaks = seq(0, 1.0, by=0.05), xlim = c(0, 1.0), ylim = c(0, 7))
+    freq = FALSE, breaks = seq(0, 1.0, by=0.05), xlim = c(0, 1.0), ylim = c(0, 10))
 abline(v = ci$percent[4], lty=1, col="red", lwd=2)
 abline(v = ci$percent[5], lty=1, col="red", lwd=2)
 abline(v = mean(results$t), lty=2, col="blue", lwd=2)
@@ -105,7 +105,7 @@ ci <- boot.ci(results, type = "perc") # 使用百分位数法计算CI
 cat("95% 置信区间为:", ci$perc[4:5], "\n", "均值为：", mean(results$t)) # 输出置信区间
 hist(results$t,  main = "Distribution of Resampling", 
      xlab = "Stability", ylab = "Probability Density", 
-     freq = FALSE, breaks = seq(0, 1.0, by=0.05), xlim = c(0, 1.0), ylim = c(0, 7))
+     freq = FALSE, breaks = seq(0, 1.0, by=0.05), xlim = c(0, 1.0), ylim = c(0, 10))
 abline(v = ci$percent[4], lty=1, col="red", lwd=2)
 abline(v = ci$percent[5], lty=1, col="red", lwd=2)
 abline(v = mean(results$t), lty=2, col="blue", lwd=2)

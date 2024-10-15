@@ -1,6 +1,20 @@
 # 原始数据
-consistency <- c(0.76, 0.76, 0.54, 0.84, 0.72, 0.80, 0.47, 0.59, 0.90, 0.85, 0.57, 0.62, 0.42, 0.41, 0.60, 0.53, 0.65, 0.47, 0.56, 0.37, 0.32, 0.41, 0.19, 0.34)
-stability <- c(0.0908, 0.1300, 0.1198, 0.1732, 0.1296, 0.1374, 0.0925, 0.1401, 0.1263, 0.1256, 0.1342, 0.1451, 0.0944, 0.1013, 0.1031, 0.0899, 0.0997, 0.1473, 0.1294, 0.1431, 0.1127, 0.0943, 0.1231, 0.1289)
+consistency <- c(0.758723689,0.741630831,0.536109874,0.843714961,0.702517468,0.775710504,0.459860625,0.561674837,0.897711598,0.850828482,0.540000902,0.660758868,
+                 0.360305699,0.581103409,0.544427806,0.667384939,0.413428139,0.446378113,0.550374351,0.364488531,0.316866413,0.426448143,0.191215952,0.344406859)
+stability <- c(0.091172409,0.133698286,0.1211534,0.175871764,0.129615282,0.134330704,0.094701142,0.140119631,0.12641324,0.128498997,0.133934345,0.144711743,
+               0.099161739,0.107431095,0.089916282,0.097764815,0.087530843,0.148814035,0.128764674,0.1415967,0.114875641,0.097051116,0.125112163,0.129765997)
+
+# Z-score 标准化结合 Sigmoid 函数
+zscore_norm <- function(x) {
+  (x - mean(x)) / sd(x)
+}
+zscore_sigmoid_norm <- function(x) {
+  1 / (1 + exp(-zscore_norm(x)))
+}
+consistency_zscore_sigmoid <- zscore_sigmoid_norm(consistency)
+stability_zscore_sigmoid <- zscore_sigmoid_norm(stability)
+cat("Z-score 归一化结合 Sigmoid Consistency:", paste(consistency_zscore_sigmoid, collapse = ", "), "\n")
+cat("Z-score 归一化结合 Sigmoid Stability:", paste(stability_zscore_sigmoid, collapse = ", "), "\n")
 
 # Min-Max 归一化
 min_max_norm <- function(x) {
@@ -30,16 +44,6 @@ softmax_norm <- function(x) {
 consistency_softmax <- softmax_norm(consistency)
 stability_softmax <- softmax_norm(stability)
 
-# Z-score 标准化结合 Sigmoid 函数
-zscore_norm <- function(x) {
-  (x - mean(x)) / sd(x)
-}
-zscore_sigmoid_norm <- function(x) {
-  1 / (1 + exp(-zscore_norm(x)))
-}
-consistency_zscore_sigmoid <- zscore_sigmoid_norm(consistency)
-stability_zscore_sigmoid <- zscore_sigmoid_norm(stability)
-
 # Log 归一化 (先取对数再归一化到0-1)
 log_norm <- function(x) {
   log_x <- log(x + 1e-9)  # 加上一个小常数避免log(0)
@@ -59,7 +63,5 @@ cat("Robust 归一化 Consistency:", paste(consistency_robust, collapse = ", "),
 cat("Robust 归一化 Stability:", paste(stability_robust, collapse = ", "), "\n")
 cat("SoftMax 归一化 Consistency:", paste(consistency_softmax, collapse = ", "), "\n")
 cat("SoftMax 归一化 Stability:", paste(stability_softmax, collapse = ", "), "\n")
-cat("Z-score 归一化结合 Sigmoid Consistency:", paste(consistency_zscore_sigmoid, collapse = ", "), "\n")
-cat("Z-score 归一化结合 Sigmoid Stability:", paste(stability_zscore_sigmoid, collapse = ", "), "\n")
 cat("Log 归一化 Consistency:", paste(consistency_log_norm, collapse = ", "), "\n")
 cat("Log 归一化 Stability:", paste(stability_log_norm, collapse = ", "), "\n")

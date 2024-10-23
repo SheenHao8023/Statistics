@@ -3,6 +3,9 @@ library(ggsci)
 library(ggpubr)
 library(ggplot2)
 
+#症状学结果图
+
+#行为学结果图
 group1 <- 'HC'
 group2 <- 'Positive'
 group3 <- 'Negative'

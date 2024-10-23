@@ -8,8 +8,8 @@ group2 <- 'Positive'
 group3 <- 'Negative'
 group3.1 <- 'Blunted Affect'
 group3.2 <- 'Withdrawal'
-mycolors <-c('#01A187', '#4DBBD4','#E64A35')
-mycolors2 <-c('#01A187','#4DBBD4','#B22222','#FF6B52')
+mycolors <-c('#66c2a5', '#fc8d62','#8da0cb')
+mycolors2 <-c('#66c2a5','#fc8d62','#e78ac3','#a6d854')
 
 dat1 <- data.frame(group = factor(c(rep(group1,12),rep(group2,8),rep(group3,4)),
 levels = c(group1,group2,group3)),

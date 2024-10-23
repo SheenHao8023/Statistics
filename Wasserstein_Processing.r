@@ -3,7 +3,7 @@ library(writexl)
 library(transport)
 library(boot)
 
-dataHC <- read_excel("C:/Users/haox8/Desktop/HC_FC.xlsx", col_names = TRUE)
+dataHC <- read_excel("C:/Users/ASUS/Desktop/AI_SCZ/Analysis_ridge/HC_FC.xlsx", col_names = TRUE)
 dataHC <- as.data.frame(dataHC)
 dataHC[, sapply(dataHC, is.numeric)] <- lapply(dataHC[, sapply(dataHC, is.numeric)], function(x) {
   if (any(is.na(x))) {
@@ -11,7 +11,7 @@ dataHC[, sapply(dataHC, is.numeric)] <- lapply(dataHC[, sapply(dataHC, is.numeri
   return(x)})
 dataHC_boot <- matrix(NA, ncol = ncol(dataHC), nrow = 1000)
 colnames(dataHC_boot) <- colnames(dataHC)
-dataSZ <- read_excel("C:/Users/haox8/Desktop/SZ_FC.xlsx", col_names = TRUE)
+dataSZ <- read_excel("C:/Users/ASUS/Desktop/AI_SCZ/Analysis_ridge/SZ_FC.xlsx", col_names = TRUE)
 dataSZ <- as.data.frame(dataSZ)
 dataSZ[, sapply(dataSZ, is.numeric)] <- lapply(dataSZ[, sapply(dataSZ, is.numeric)], function(x) {
   if (any(is.na(x))) {
@@ -39,5 +39,5 @@ for (i in 1:nrow(dataSZ)) {
   for (j in 2:ncol(dataSZ)) {
     abs_diff <- abs(dataSZ[i, j] - meanSZ[j])  # 计算差值的绝对值
     SZ_FC_processed[i, j] <- abs_diff * W_Distance[1, j]}}
-write_xlsx(as.data.frame(SZ_FC_processed), path = "C:/Users/haox8/Desktop/SZ_FC_processed.xlsx")
+write_xlsx(as.data.frame(SZ_FC_processed), path = "C:/Users/ASUS/Desktop/AI_SCZ/Analysis_ridge/Results_8samples_raw.xlsx")
 

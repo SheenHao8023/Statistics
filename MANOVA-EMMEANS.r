@@ -32,7 +32,7 @@ library(dplyr)
 library(readxl)
 library(ggprism)
 data <- read_excel("C:/Users/haox8/Desktop/coherence.xlsx")
-data_long <- pivot_longer(data, cols = c('C1FC35','C2FC35'), names_to = "Condition", values_to = "Coherence")
+data_long <- pivot_longer(data, cols = c('C1FC63','C2FC63'), names_to = "Condition", values_to = "Coherence")
 data_long$Group <- factor(data_long$Group, labels = c("SZ", "HC"))
 data_long$Condition <- factor(data_long$Condition, labels = c("Resting state", "Tasking state"))
 data_long$Coherence <- as.numeric(data_long$Coherence)
@@ -48,7 +48,26 @@ ggplot(summary_data, aes(x = Condition, y = Mean, fill = Group)) +
   scale_fill_manual(values = c("#EE7D80","#D3D3D3")) +  # 设置颜色
   theme_prism(axis_text_angle = 0) + 
   coord_cartesian(ylim = c(0, 0.8)) +
-  theme(axis.title.x = element_text(size = 14), axis.text.x = element_text(size = 12)) # 改变轴标签字体大小
+  theme(axis.title.x = element_text(size = 14), axis.text.x = element_text(size = 12)) 
+ggplot(data_long, aes(x = Condition, y = Coherence, fill = Group)) +
+  geom_boxplot(outlier.shape = NA, position = position_dodge(0.75), width = 0.5) +  # 不显示箱线图的离群值
+  geom_jitter(position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.75), size = 1, alpha = 0.6) +  # 添加抖动点
+  labs(x = "Condition", y = "RDLPFC-LDLPFC", fill = "Group") +
+  theme_minimal() +
+  scale_fill_manual(values = c("#EE7D80","#D3D3D3")) +  # 设置颜色
+  theme_prism(axis_text_angle = 0) +
+  coord_cartesian(ylim = c(0.2, 0.8)) +
+  theme(axis.title.x = element_text(size = 14), axis.text.x = element_text(size = 12))
+ggplot(data_long, aes(x = Condition, y = Coherence, fill = Group)) +
+  geom_violin(position = position_dodge(0.75), alpha = 0.5) +  # 绘制小提琴图
+  geom_jitter(position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.75), size = 1, alpha = 0.6) +  # 添加抖动点
+  labs(x = "Condition", y = "LDLPFC-LA", fill = "Group") +
+  theme_minimal() +
+  scale_fill_manual(values = c("#EE7D80","#D3D3D3")) +  # 设置颜色
+  theme_prism(axis_text_angle = 0) +
+  coord_cartesian(ylim = c(0.2, 0.8)) +
+  theme(axis.title.x = element_text(size = 14), axis.text.x = element_text(size = 12))
+
 
 
 m2 = MANOVA(data, dvs = "C1FC01:C5FC66", dvs.pattern = "C(.)FC(..)", between = "Group",

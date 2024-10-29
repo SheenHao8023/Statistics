@@ -15,7 +15,7 @@ symcolors2 <-c('#fc8d62','#e78ac3','#a6d854')
 
 dat3 <- data.frame(
   group = factor(rep(c(group2, group3), times = c(24, 12)), levels = c(group2, group3)),
-  metric = factor(rep(c("P1+P3", "N2+N4", "N1"), times = c(8, 8, 8, 4, 4, 4)), levels = c("P1+P3", "N2+N4", "N1")),
+  metric = factor(rep(c("P1+P3", "N2+N4", "N1"), each = c(8, 8, 8, 4, 4, 4)), levels = c("P1+P3", "N2+N4", "N1")),
   value = c(5,3,6,10,6,3,6,7,4,2,2,2,2,2,2,2,2,1,1,1,1,1,1,2,8,3,2,5,2,2,4,8,4,2,2,3))
 summary_dat <- aggregate(value ~ group + metric, data = dat3, FUN = mean)
 sd_dat <- aggregate(value ~ group + metric, data = dat3, FUN = sd)

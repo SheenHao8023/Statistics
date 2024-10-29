@@ -2,6 +2,8 @@ library(ggprism)
 library(ggsci)
 library(ggpubr)
 library(ggplot2)
+library(dplyr)
+library(tidyr)
 
 group1 <- 'HC'
 group2 <- 'Positive'
@@ -13,24 +15,32 @@ mycolors2 <-c('#66c2a5','#fc8d62','#e78ac3','#a6d854')
 symcolors <-c('#fc8d62','#8da0cb')
 symcolors2 <-c('#fc8d62','#e78ac3','#a6d854')
 
-dat3 <- data.frame(
-  group = factor(rep(c(group2, group3), times = c(24, 12)), levels = c(group2, group3)),
-  metric = factor(rep(c("P1+P3", "N2+N4", "N1"), each = c(8, 8, 8, 4, 4, 4)), levels = c("P1+P3", "N2+N4", "N1")),
-  value = c(5,3,6,10,6,3,6,7,4,2,2,2,2,2,2,2,2,1,1,1,1,1,1,2,8,3,2,5,2,2,4,8,4,2,2,3))
-summary_dat <- aggregate(value ~ group + metric, data = dat3, FUN = mean)
-sd_dat <- aggregate(value ~ group + metric, data = dat3, FUN = sd)
-summary_dat$sd <- sd_dat$value
-sym2 <- ggplot(data = summary_dat, mapping = aes(x = group, y = value, fill = metric)) + 
-  stat_summary(fun = "mean", geom = "bar", position = position_dodge(width = 0.9), width = 0.7, colour = "black", size = 0.9) + 
-  geom_jitter(data = dat3, aes(x = group, y = value), size = 2, width = 0.2, position = position_dodge(width = 0.9)) + 
-  stat_summary(fun = "mean", fun.max = function(x) mean(x) + sd(x), fun.min = function(x) mean(x) - sd(x), 
-               geom = "errorbar", width = 0.4, size = 0.9, position = position_dodge(width = 0.9)) + 
-  theme_prism(axis_text_angle = 45) + 
-  theme(legend.position = "top") +  
-  coord_cartesian(ylim = c(0, max(summary_dat$value + summary_dat$sd))) +
-  scale_fill_manual(values = c("#F8766D", "#00BFC4", "#7CAE00")) +  # 自定义颜色
-  labs(x=element_blank(),y = "Scores", fill = "Metrics")
-sym2
+# 加载必要的库
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+
+# 创建数据框
+data <- data.frame(
+  Group = rep(c("Positive", "Negative"), each = 8),
+  P1_P3 = c(5, 3, 6, 10, 6, 3, 6, 7, 8, 3, 2, 5),
+  N2_N4 = c(4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 8),
+  N1 = c(2, 1, 1, 1, 1, 1, 1, 2, 4, 2, 2, 3))
+data_long <- data %>%
+  pivot_longer(cols = -Group, names_to = "Metric", values_to = "Value")
+summary_data <- data_long %>%
+  group_by(Group, Metric) %>%
+  summarize(Mean = mean(Value),SD = sd(Value),.groups = 'drop')
+ggplot(summary_data, aes(x = Group, y = Mean, fill = Metric)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.7), width = 0.6) +
+  geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD), position = position_dodge(width = 0.7), width = 0.2) +
+  geom_jitter(data = data_long, aes(y = Value, color = Metric), position = position_jitter(width = 0.2), alpha = 0.5) +
+  scale_fill_manual(values = c("P1_P3" = "#FF9999", "N2_N4" = "#99CCFF", "N1" = "#FFFF99")) +
+  scale_color_manual(values = c("P1_P3" = "#FF9999", "N2_N4" = "#99CCFF", "N1" = "#FFFF99")) +
+  labs(x = "Group", y = "Mean Value", fill = "Metric", color = "Metric") +
+  theme_minimal() +
+  theme(legend.position = "top")
+
 
 #行为学结果图
 dat1 <- data.frame(group = factor(c(rep(group1,12),rep(group2,8),rep(group3,4)),

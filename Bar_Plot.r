@@ -5,17 +5,8 @@ library(ggplot2)
 library(dplyr)
 library(tidyr)
 
-group1 <- 'HC'
-group2 <- 'Positive'
-group3 <- 'Negative'
-group3.1 <- 'Blunted Affect'
-group3.2 <- 'Withdrawal'
-mycolors <-c('#66c2a5', '#fc8d62','#8da0cb')
-mycolors2 <-c('#66c2a5','#fc8d62','#e78ac3','#a6d854')
-symcolors <-c('#fc8d62','#8da0cb')
-symcolors2 <-c('#fc8d62','#e78ac3','#a6d854')
 
-
+#两组的症状学
 data <- data.frame(
   "A" = c(5, 3, 6, 10, 6, 3, 6, 7, 8, 3, 2, 5),
   "B" = c(4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 8),
@@ -28,11 +19,13 @@ summary_data <- data_long %>%
   summarise(mean = mean(Value), sd = sd(Value), .groups = 'drop')
 levels(summary_data$Metric) <- c("A", "B", "C")
 summary_data$Group <- factor(summary_data$Group, levels = c("Positive", "Negative"))
+data_long$Group <- factor(data_long$Group, levels = c("Positive", "Negative"))
+summary_data$Metric <- factor(summary_data$Metric, levels = c("A", "B", "C"))
 ggplot(summary_data, aes(x = Metric, y = mean, fill = Group)) +
   geom_bar(stat = "identity", position = position_dodge(width = 0.9), width = 0.7, colour = "black", linewidth = 0.9) + # 添加黑色边框
   geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd), width = 0.4, position = position_dodge(width = 0.9), linewidth = 0.9) + # 误差线加粗
   geom_jitter(data = data_long, aes(x = Metric, y = Value, color = Group), 
-              position = position_jitterdodge(jitter.width = 0.1, dodge.width = 0.7), alpha = 1, size = 2, color = "black") + # 抖动点为黑色
+             position = position_jitterdodge(jitter.width = 0.1, dodge.width = 0.7), alpha = 1, size = 2, color = "black") + # 抖动点为黑色
   scale_fill_manual(values = c('#fc8d62','#8da0cb')) + # 柔和的颜色
   scale_x_discrete(labels = c( "P1+P3", "N2+N4", "N1")) + 
   labs(x = element_blank(), y = "Item Score") +
@@ -45,6 +38,48 @@ ggplot(summary_data, aes(x = Metric, y = mean, fill = Group)) +
         axis.text = element_text(size=12, color="black"),  # 轴文本大小和颜色
         axis.ticks = element_line(linewidth = 0.9, color = "black")) 
 
+
+#三组的症状学
+data <- data.frame(
+  "A" = c(5, 3, 6, 10, 6, 3, 6, 7, 8, 3, 2, 5),
+  "B" = c(4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 8),
+  "C" = c(2, 1, 1, 1, 1, 1, 1, 2, 4, 2, 2, 3))
+data$Group <- c(rep("Positive", 8), rep("Blunted Affect", 2), rep("Withdrawal", 2))
+data_long <- data %>%
+  pivot_longer(cols = -Group, names_to = "Metric", values_to = "Value")
+summary_data <- data_long %>%
+  group_by(Metric, Group) %>%
+  summarise(mean = mean(Value), sd = sd(Value), .groups = 'drop')
+levels(summary_data$Metric) <- c("A", "B", "C")
+summary_data$Group <- factor(summary_data$Group, levels = c("Positive", "Blunted Affect", "Withdrawal"))
+data_long$Group <- factor(data_long$Group, levels = c("Positive",  "Blunted Affect", "Withdrawal"))
+summary_data$Metric <- factor(summary_data$Metric, levels = c("A", "B", "C"))
+ggplot(summary_data, aes(x = Metric, y = mean, fill = Group)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.9), width = 0.7, colour = "black", linewidth = 0.9) + # 添加黑色边框
+  geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd), width = 0.4, position = position_dodge(width = 0.9), linewidth = 0.9) + # 误差线加粗
+  geom_jitter(data = data_long, aes(x = Metric, y = Value, color = Group), 
+             position = position_jitterdodge(jitter.width = 0.1, dodge.width = 0.7), alpha = 1, size = 2, color = "black") + # 抖动点为黑色
+  scale_fill_manual(values = c('#fc8d62','#e78ac3','#a6d854')) + # 柔和的颜色
+  scale_x_discrete(labels = c( "P1+P3", "N2+N4", "N1")) + 
+  labs(x = element_blank(), y = "Item Score") +
+  theme_minimal() +
+  theme(panel.grid.major = element_blank(), # 移除主要网格线
+        panel.grid.minor = element_blank(), # 移除次要网格线
+        legend.position = "right", # 图例放在右侧
+        axis.line = element_line(linewidth = 0.9, color = "black"), # 黑色坐标轴线
+        axis.title = element_text(size=14),   # 轴标题大小和样式
+        axis.text = element_text(size=12, color="black"),  # 轴文本大小和颜色
+        axis.ticks = element_line(linewidth = 0.9, color = "black")) 
+
+
+
+group1 <- 'HC'
+group2 <- 'Positive'
+group3 <- 'Negative'
+group3.1 <- 'Blunted Affect'
+group3.2 <- 'Withdrawal'
+mycolors <-c('#66c2a5', '#fc8d62','#8da0cb')
+mycolors2 <-c('#66c2a5','#fc8d62','#e78ac3','#a6d854')
 
 #行为学结果图
 dat1 <- data.frame(group = factor(c(rep(group1,12),rep(group2,8),rep(group3,4)),

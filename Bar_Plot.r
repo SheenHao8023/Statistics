@@ -14,7 +14,7 @@ symcolors <-c('#fc8d62','#8da0cb')
 symcolors2 <-c('#fc8d62','#e78ac3','#a6d854')
 
 dat3 <- data.frame(
-  group = factor(rep(c(group2, group3), times = c(24, 12)), levels = c(group1, group2)),
+  group = factor(rep(c(group2, group3), times = c(24, 12)), levels = c(group2, group3)),
   metric = factor(rep(c("P1+P3", "N2+N4", "N1"), times = c(8, 8, 8, 4, 4, 4)), levels = c("P1+P3", "N2+N4", "N1")),
   value = c(5,3,6,10,6,3,6,7,4,2,2,2,2,2,2,2,2,1,1,1,1,1,1,2,8,3,2,5,2,2,4,8,4,2,2,3))
 summary_dat <- aggregate(value ~ group + metric, data = dat3, FUN = mean)
@@ -29,7 +29,7 @@ sym2 <- ggplot(data = summary_dat, mapping = aes(x = group, y = value, fill = me
   theme(legend.position = "top") +  
   coord_cartesian(ylim = c(0, max(summary_dat$value + summary_dat$sd))) +
   scale_fill_manual(values = c("#F8766D", "#00BFC4", "#7CAE00")) +  # 自定义颜色
-  labs(y = "Scores", fill = "Metrics")
+  labs(x=element_blank(),y = "Scores", fill = "Metrics")
 sym2
 
 #行为学结果图

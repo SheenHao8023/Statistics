@@ -22,7 +22,8 @@ data <- data.frame(
   'N2+N4' = c(4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 8),
   'N1' = c(2, 1, 1, 1, 1, 1, 1, 2, 4, 2, 2, 3))
 data_long <- data %>%
-  pivot_longer(cols = -Group, names_to = "Metric", values_to = "Value")
+  pivot_longer(cols = -Group, names_to = "Metric", values_to = "Value")%>%
+  mutate(Metric = factor(Metric, levels = c("P1+P3", "N2+N4", "N1")))  # 设置指标顺序
 summary_data <- data_long %>%
   group_by(Group, Metric) %>%
   summarize(Mean = mean(Value),SD = sd(Value),.groups = 'drop')

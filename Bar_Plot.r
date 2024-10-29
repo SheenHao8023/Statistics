@@ -15,17 +15,12 @@ mycolors2 <-c('#66c2a5','#fc8d62','#e78ac3','#a6d854')
 symcolors <-c('#fc8d62','#8da0cb')
 symcolors2 <-c('#fc8d62','#e78ac3','#a6d854')
 
-# 加载必要的库
-library(ggplot2)
-library(dplyr)
-library(tidyr)
 
-# 创建数据框
 data <- data.frame(
-  Group = rep(c("Positive", "Negative"), each = 8),
-  P1_P3 = c(5, 3, 6, 10, 6, 3, 6, 7, 8, 3, 2, 5),
-  N2_N4 = c(4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 8),
-  N1 = c(2, 1, 1, 1, 1, 1, 1, 2, 4, 2, 2, 3))
+  Group = rep(c("Positive", "Negative"), times = c(8, 4)),
+  'P1+P3' = c(5, 3, 6, 10, 6, 3, 6, 7, 8, 3, 2, 5),
+  'N2+N4' = c(4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 8),
+  'N1' = c(2, 1, 1, 1, 1, 1, 1, 2, 4, 2, 2, 3))
 data_long <- data %>%
   pivot_longer(cols = -Group, names_to = "Metric", values_to = "Value")
 summary_data <- data_long %>%
@@ -33,13 +28,15 @@ summary_data <- data_long %>%
   summarize(Mean = mean(Value),SD = sd(Value),.groups = 'drop')
 ggplot(summary_data, aes(x = Group, y = Mean, fill = Metric)) +
   geom_bar(stat = "identity", position = position_dodge(width = 0.7), width = 0.6) +
-  geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD), position = position_dodge(width = 0.7), width = 0.2) +
-  geom_jitter(data = data_long, aes(y = Value, color = Metric), position = position_jitter(width = 0.2), alpha = 0.5) +
-  scale_fill_manual(values = c("P1_P3" = "#FF9999", "N2_N4" = "#99CCFF", "N1" = "#FFFF99")) +
-  scale_color_manual(values = c("P1_P3" = "#FF9999", "N2_N4" = "#99CCFF", "N1" = "#FFFF99")) +
-  labs(x = "Group", y = "Mean Value", fill = "Metric", color = "Metric") +
+  geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD), position = position_dodge(width = 0.7), width = 0.4) +
+  geom_jitter(data = data_long, aes(y = Value, color = Metric), position = position_jitter(width = 0.2), alpha = 1) +
+  scale_fill_manual(values = c("P1+P3" = "#FF9999", "N2+N4" = "#99CCFF", "N1" = "#FFFF99")) +
+  scale_color_manual(values = c("P1+P3" = "#FF9999", "N2+N4" = "#99CCFF", "N1" = "#FFFF99")) +
+  labs(x=element_blank(), y = "Scores", fill = "Metric", color = "Metric") +
   theme_minimal() +
-  theme(legend.position = "top")
+  theme_prism(axis_text_angle = 0)+ 
+  coord_cartesian(ylim = c(0, 10))
+
 
 
 #行为学结果图

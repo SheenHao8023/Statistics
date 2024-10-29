@@ -17,27 +17,33 @@ symcolors2 <-c('#fc8d62','#e78ac3','#a6d854')
 
 
 data <- data.frame(
-  Group = rep(c("Positive", "Negative"), times = c(8, 4)),
-  'P1+P3' = c(5, 3, 6, 10, 6, 3, 6, 7, 8, 3, 2, 5),
-  'N2+N4' = c(4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 8),
-  'N1' = c(2, 1, 1, 1, 1, 1, 1, 2, 4, 2, 2, 3))
+  "A" = c(5, 3, 6, 10, 6, 3, 6, 7, 8, 3, 2, 5),
+  "B" = c(4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 8),
+  "C" = c(2, 1, 1, 1, 1, 1, 1, 2, 4, 2, 2, 3))
+data$Group <- c(rep("Positive", 8), rep("Negative", 4))
 data_long <- data %>%
-  pivot_longer(cols = -Group, names_to = "Metric", values_to = "Value")%>%
-  mutate(Metric = factor(Metric, levels = c("P1+P3", "N2+N4", "N1")))  # 设置指标顺序
+  pivot_longer(cols = -Group, names_to = "Metric", values_to = "Value")
 summary_data <- data_long %>%
-  group_by(Group, Metric) %>%
-  summarize(Mean = mean(Value),SD = sd(Value),.groups = 'drop')
-ggplot(summary_data, aes(x = Group, y = Mean, fill = Metric)) +
-  geom_bar(stat = "identity", position = position_dodge(width = 0.7), width = 0.6) +
-  geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD), position = position_dodge(width = 0.7), width = 0.4) +
-  geom_jitter(data = data_long, aes(y = Value, color = Metric), position = position_jitter(width = 0.2), alpha = 1) +
-  scale_fill_manual(values = c("P1+P3" = "#FF9999", "N2+N4" = "#99CCFF", "N1" = "#FFFF99")) +
-  scale_color_manual(values = c("P1+P3" = "#FF9999", "N2+N4" = "#99CCFF", "N1" = "#FFFF99")) +
-  labs(x=element_blank(), y = "Scores", fill = "Metric", color = "Metric") +
+  group_by(Metric, Group) %>%
+  summarise(mean = mean(Value), sd = sd(Value), .groups = 'drop')
+levels(summary_data$Metric) <- c("A", "B", "C")
+summary_data$Group <- factor(summary_data$Group, levels = c("Positive", "Negative"))
+ggplot(summary_data, aes(x = Metric, y = mean, fill = Group)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.9), width = 0.7, colour = "black", linewidth = 0.9) + # 添加黑色边框
+  geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd), width = 0.4, position = position_dodge(width = 0.9), linewidth = 0.9) + # 误差线加粗
+  geom_jitter(data = data_long, aes(x = Metric, y = Value, color = Group), 
+              position = position_jitterdodge(jitter.width = 0.1, dodge.width = 0.7), alpha = 1, size = 2, color = "black") + # 抖动点为黑色
+  scale_fill_manual(values = c('#fc8d62','#8da0cb')) + # 柔和的颜色
+  scale_x_discrete(labels = c( "P1+P3", "N2+N4", "N1")) + 
+  labs(x = element_blank(), y = "Item Score") +
   theme_minimal() +
-  theme_prism(axis_text_angle = 0)+ 
-  coord_cartesian(ylim = c(0, 10))
-
+  theme(panel.grid.major = element_blank(), # 移除主要网格线
+        panel.grid.minor = element_blank(), # 移除次要网格线
+        legend.position = "right", # 图例放在右侧
+        axis.line = element_line(linewidth = 0.9, color = "black"), # 黑色坐标轴线
+        axis.title = element_text(size=14),   # 轴标题大小和样式
+        axis.text = element_text(size=12, color="black"),  # 轴文本大小和颜色
+        axis.ticks = element_line(linewidth = 0.9, color = "black")) 
 
 
 #行为学结果图

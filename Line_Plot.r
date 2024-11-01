@@ -54,24 +54,26 @@ phase_angles <- phase_data %>%
   mutate(Phase_Angle = atan2(Re(Phase_1), Im(Phase_1)) * (180 / pi)) %>%
   select(Phase_Angle)
 
-phase_angles <- data.frame(angle = c(runif(8, 0, 360), runif(8, 0, 360))) # 替换为你的实际数据
-
-# 创建同心圆的数据
 angles <- data.frame(
-  angle = rep(phase_angles$angle, each = 100),
-  group = rep(c("Participant A", "Participant B"), each = 800)
+  experiment = rep(1:8, each = 2),
+  angle = c(phase_angles$Phase_Angle[1:8], phase_angles$Phase_Angle[9:16]),
+  group = rep(c("Participant A", "Participant B"), times = 8)
 )
 
-# 计算弧线坐标
+# 计算弧线的坐标
 angles <- angles %>%
-  mutate(radius = rep(1:8, times = 100),  # 每个圆的半径
-         t = seq(0, 1, length.out = 100)) %>%
-  mutate(x = radius * cos(angle * t * (pi / 180)),
-         y = radius * sin(angle * t * (pi / 180)))
+  mutate(start_angle = lag(angle, default = 0),
+         end_angle = angle,
+         radius = experiment) %>%
+  rowwise() %>%
+  mutate(x_start = radius * cos((start_angle) * (pi / 180)),
+         y_start = radius * sin((start_angle) * (pi / 180)),
+         x_end = radius * cos((end_angle) * (pi / 180)),
+         y_end = radius * sin((end_angle) * (pi / 180)))
 
 # 绘制同心圆图
-ggplot(angles, aes(x = x, y = y, group = interaction(group, radius), color = group)) +
-  geom_path(size = 1.2) +
+ggplot() +
+  geom_segment(data = angles, aes(x = x_start, y = y_start, xend = x_end, yend = y_end, color = group), size = 2) +
   coord_fixed() +  # 保持圆形比例
   scale_color_manual(values = c("Participant A" = "#80d6ff", "Participant B" = "#f47c7c")) +
   labs(title = "Phase Angles of Participants A and B", x = "X-axis", y = "Y-axis", color = "Participant") +
@@ -79,4 +81,3 @@ ggplot(angles, aes(x = x, y = y, group = interaction(group, radius), color = gro
   theme(legend.position = "right",
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank())
-

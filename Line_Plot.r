@@ -35,3 +35,16 @@ for (i in 2:31) {
   prev_col_name <- paste0("ITI", i - 1)
   curr_col_name <- paste0("ITI", i)
   dataRT[[curr_col_name]] <- dataRT[[curr_col_name]] + dataRT[[prev_col_name]]}
+phase_data <- dataRT %>% 
+  rowwise() %>% 
+  mutate(across(ITI1:ITI31, ~ (.-mean(c_across(ITI1:ITI31)))/sd(c_across(ITI1:ITI31)))) %>% 
+  mutate(Phase = list(exp(1i * c_across(ITI1:ITI31) * 2 * pi / max(c_across(ITI1:ITI31))))) %>%
+  unnest_wider(Phase, names_sep = "_") %>%
+  select(-starts_with("ITI"))
+
+# 计算相位角
+phase_angles <- phase_data %>%
+  rowwise() %>%
+  mutate(Phase_Angle = atan2(Re(Phase_1), Im(Phase_1)) * (180 / pi)) %>%
+  select(Phase_Angle)
+

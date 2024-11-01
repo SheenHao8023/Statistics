@@ -54,3 +54,26 @@ phase_angles <- phase_data %>%
   mutate(Phase_Angle = atan2(Re(Phase_1), Im(Phase_1)) * (180 / pi)) %>%
   select(Phase_Angle)
 
+
+angles <- data.frame(
+  angle = c(phase_angles$angle[1:8], phase_angles$angle[9:16]),
+  group = rep(c("Participant A", "Participant B"), each = 8)
+)
+
+# 创建圆形图的数据
+angles <- angles %>%
+  mutate(radius = rep(1:8, times = 2)) %>%
+  mutate(x = radius * cos(angle * (pi / 180)),
+         y = radius * sin(angle * (pi / 180)))
+
+# 绘制同心圆图
+ggplot(angles, aes(x = x, y = y, group = interaction(group, radius), color = group)) +
+  geom_polygon(alpha = 0.5) +
+  coord_fixed() +  # 保持圆形比例
+  scale_color_manual(values = c("Participant A" = "#80d6ff", "Participant B" = "#f47c7c")) +
+  labs(title = "Phase Angles of Participants A and B", x = "X-axis", y = "Y-axis", color = "Participant") +
+  theme_minimal() +
+  theme(legend.position = "right",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+

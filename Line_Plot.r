@@ -4,6 +4,7 @@ library(tidyr)
 library(ggplot2)
 library(complex)
 
+#ITI 折线图
 data <- read_excel("C:/Users/ASUS/Desktop/ITI.xlsx", col_names = TRUE)
 data <- data %>%
   mutate(Participant = rep(c("Role A", "Role B"), each = 8))
@@ -28,6 +29,26 @@ ggplot(data_summary, aes(x = ITI, y = mean, group = Participant, color = Partici
         axis.title = element_text(size=14),   # 轴标题大小和样式
         axis.text = element_text(size=12, color="black"),  # 轴文本大小和颜色
         axis.ticks = element_line(linewidth = 0.9, color = "black")) 
+
+#Stability柱状图
+iti_data <- data[1, 8:31]
+iti_data <- data.frame(Index = 1:24, Value = as.numeric(iti_data))
+ggplot(iti_data, aes(x = Index, y = Value, fill = factor(1))) +
+    geom_bar(stat = "identity") +
+    scale_fill_manual(values = "#f47c7c", name = "Role B") +
+    scale_x_continuous(breaks = c(0,8,16,24)) + # 设置横坐标最多标注到24
+    coord_cartesian(ylim = c(350,550))+ 
+    theme_minimal() +
+    labs(x = "ITI", y = "Time (ms)") +
+    theme(
+      panel.grid.major = element_blank(), # 移除主要网格线
+      panel.grid.minor = element_blank(), # 移除次要网格线
+      axis.line = element_line(linewidth = 0.9, color = "black"), # 黑色坐标轴线
+      axis.title = element_text(size = 14), # 轴标题大小和样式
+      axis.text = element_text(size = 12, color = "black"), # 轴文本大小和颜色
+      axis.ticks = element_line(linewidth = 0.9, color = "black"), # 坐标轴刻度线样式
+      axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 0.5))
+
 
 dataRT <- data %>%
   mutate(across(ITI1:ITI31, ~ifelse(is.na(.), 500, .)))
@@ -54,29 +75,3 @@ phase_angles <- phase_data %>%
 
 
 
-
-angles <- data.frame(
-  experiment = rep(1:8, each = 2),
-  angle = c(phase_angles$Phase_Angle[1:8], phase_angles$Phase_Angle[9:16]),
-  group = rep(c("Participant A", "Participant B"), times = 8)
-)
-angles <- angles %>%
-  mutate(start_angle = lag(angle, default = 0),
-         radius = experiment)
-
-# 计算每个弧的起始和结束角度
-angles <- angles %>%
-  mutate(start_rad = (start_angle) * (pi / 180),
-         end_rad = (angle) * (pi / 180))
-
-# 绘制同心圆图
-ggplot() +
-  geom_arc(aes(x0 = 0, y0 = 0, r = radius, start = start_rad, end = end_rad, color = group), 
-           data = angles, size = 2) +
-  coord_fixed() +  # 保持圆形比例
-  scale_color_manual(values = c("Participant A" = "#80d6ff", "Participant B" = "#f47c7c")) +
-  labs(title = "Phase Angles of Participants A and B", x = "X-axis", y = "Y-axis", color = "Participant") +
-  theme_minimal() +
-  theme(legend.position = "right",
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank())

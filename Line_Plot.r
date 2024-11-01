@@ -35,6 +35,12 @@ for (i in 2:31) {
   prev_col_name <- paste0("ITI", i - 1)
   curr_col_name <- paste0("ITI", i)
   dataRT[[curr_col_name]] <- dataRT[[curr_col_name]] + dataRT[[prev_col_name]]}
+phase_data <- dataRT %>%
+  rowwise() %>%
+  mutate(Hilbert_Transform = list(hilbert(c_across(ITI1:ITI31)))) %>%
+  mutate(Phase_Angle = atan2(Im(Hilbert_Transform[[1]]), Re(Hilbert_Transform[[1]])) * (180 / pi)) %>%
+  ungroup()
+
 phase_data <- dataRT %>% 
   rowwise() %>% 
   mutate(across(ITI1:ITI31, ~ (.-mean(c_across(ITI1:ITI31)))/sd(c_across(ITI1:ITI31)))) %>% 

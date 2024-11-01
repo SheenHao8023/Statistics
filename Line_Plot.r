@@ -40,40 +40,39 @@ phase_data <- dataRT %>%
   mutate(Hilbert_Transform = list(hilbert(c_across(ITI1:ITI31)))) %>%
   mutate(Phase_Angle = atan2(Im(Hilbert_Transform[[1]]), Re(Hilbert_Transform[[1]])) * (180 / pi)) %>%
   ungroup()
-
 phase_data <- dataRT %>% 
   rowwise() %>% 
   mutate(across(ITI1:ITI31, ~ (.-mean(c_across(ITI1:ITI31)))/sd(c_across(ITI1:ITI31)))) %>% 
   mutate(Phase = list(exp(1i * c_across(ITI1:ITI31) * 2 * pi / max(c_across(ITI1:ITI31))))) %>%
   unnest_wider(Phase, names_sep = "_") %>%
   select(-starts_with("ITI"))
-
 # 计算相位角
 phase_angles <- phase_data %>%
   rowwise() %>%
   mutate(Phase_Angle = atan2(Re(Phase_1), Im(Phase_1)) * (180 / pi)) %>%
   select(Phase_Angle)
 
+
+
+
 angles <- data.frame(
   experiment = rep(1:8, each = 2),
   angle = c(phase_angles$Phase_Angle[1:8], phase_angles$Phase_Angle[9:16]),
   group = rep(c("Participant A", "Participant B"), times = 8)
 )
-
-# 计算弧线的坐标
 angles <- angles %>%
   mutate(start_angle = lag(angle, default = 0),
-         end_angle = angle,
-         radius = experiment) %>%
-  rowwise() %>%
-  mutate(x_start = radius * cos((start_angle) * (pi / 180)),
-         y_start = radius * sin((start_angle) * (pi / 180)),
-         x_end = radius * cos((end_angle) * (pi / 180)),
-         y_end = radius * sin((end_angle) * (pi / 180)))
+         radius = experiment)
+
+# 计算每个弧的起始和结束角度
+angles <- angles %>%
+  mutate(start_rad = (start_angle) * (pi / 180),
+         end_rad = (angle) * (pi / 180))
 
 # 绘制同心圆图
 ggplot() +
-  geom_segment(data = angles, aes(x = x_start, y = y_start, xend = x_end, yend = y_end, color = group), size = 2) +
+  geom_arc(aes(x0 = 0, y0 = 0, r = radius, start = start_rad, end = end_rad, color = group), 
+           data = angles, size = 2) +
   coord_fixed() +  # 保持圆形比例
   scale_color_manual(values = c("Participant A" = "#80d6ff", "Participant B" = "#f47c7c")) +
   labs(title = "Phase Angles of Participants A and B", x = "X-axis", y = "Y-axis", color = "Participant") +

@@ -39,37 +39,7 @@ ggplot(summary_data, aes(x = Metric, y = mean, fill = Group)) +
         axis.ticks = element_line(linewidth = 0.9, color = "black")) 
 
 
-data <- data.frame(
-  "A" = c(5, 3, 6, 10, 6, 3, 6, 7, 8, 3, 2, 5),
-  "B" = c(4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 8),
-  "C" = c(2, 1, 1, 1, 1, 1, 1, 2, 4, 2, 2, 3))
-data$Group <- c(rep("Positive", 8), rep("Negative", 4))
-data_long <- data %>%
-  pivot_longer(cols = -Group, names_to = "Items", values_to = "Value")
-summary_data <- data_long %>%
-  group_by(Items, Group) %>%
-  summarise(mean = mean(Value), sd = sd(Value), .groups = 'drop')
-levels(summary_data$Items) <- c("A", "B", "C")
-summary_data$Group <- factor(summary_data$Group, levels = c("Positive", "Negative"))
-data_long$Group <- factor(data_long$Group, levels = c("Positive", "Negative"))
-summary_data$Items <- factor(summary_data$Items, levels = c("A", "B", "C"))
-data_long$Items <- factor(data_long$Items, levels = c("A", "B", "C"))
-ggplot(summary_data, aes(x = Group, y = mean, fill = Items)) +
-  geom_bar(stat = "identity", position = position_dodge(width = 0.9), width = 0.7, colour = "black", linewidth = 0.9) + # 添加黑色边框
-  geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd), width = 0.4, position = position_dodge(width = 0.9), linewidth = 0.9) + # 误差线加粗
-  geom_jitter(data = data_long, aes(x = Group, y = Value, color = Items), 
-             position = position_jitterdodge(jitter.width = 0.1, dodge.width = 0.7), alpha = 1, size = 2, color = "black") + # 抖动点为黑色
-  scale_fill_manual(labels = c("P1+P3", "N2+N4", "N1"), values = c('#66c2a5', '#fc8d62','#8da0cb')) + # 柔和的颜色
-  scale_x_discrete(labels = c("Positive", "Negative")) + 
-  labs(x = element_blank(), y = "Item Score") +
-  theme_minimal() +
-  theme(panel.grid.major = element_blank(), # 移除主要网格线
-        panel.grid.minor = element_blank(), # 移除次要网格线
-        legend.position = "right", # 图例放在右侧
-        axis.line = element_line(linewidth = 0.9, color = "black"), # 黑色坐标轴线
-        axis.title = element_text(size=14),   # 轴标题大小和样式
-        axis.text = element_text(size=12, color="black"),  # 轴文本大小和颜色
-        axis.ticks = element_line(linewidth = 0.9, color = "black")) 
+
 
 #三组的症状学
 data <- data.frame(
@@ -103,37 +73,7 @@ ggplot(summary_data, aes(x = Metric, y = mean, fill = Group)) +
         axis.text = element_text(size=12, color="black"),  # 轴文本大小和颜色
         axis.ticks = element_line(linewidth = 0.9, color = "black")) 
 
-data <- data.frame(
-  "A" = c(5, 3, 6, 10, 6, 3, 6, 7, 8, 3, 2, 5),
-  "B" = c(4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 8),
-  "C" = c(2, 1, 1, 1, 1, 1, 1, 2, 4, 2, 2, 3))
-data$Group <- c(rep("Positive", 8), rep("Blunted Affect", 2), rep("Withdrawal", 2))
-data_long <- data %>%
-  pivot_longer(cols = -Group, names_to = "Items", values_to = "Value")
-summary_data <- data_long %>%
-  group_by(Items, Group) %>%
-  summarise(mean = mean(Value), sd = sd(Value), .groups = 'drop')
-levels(summary_data$Items) <- c("A", "B", "C")
-summary_data$Group <- factor(summary_data$Group, levels = c("Positive", "Blunted Affect", "Withdrawal"))
-data_long$Group <- factor(data_long$Group, levels = c("Positive",  "Blunted Affect", "Withdrawal"))
-summary_data$Items <- factor(summary_data$Items, levels = c("A", "B", "C"))
-data_long$Items <- factor(data_long$Items, levels = c("A", "B", "C"))
-ggplot(summary_data, aes(x = Group, y = mean, fill = Items)) +
-  geom_bar(stat = "identity", position = position_dodge(width = 0.9), width = 0.7, colour = "black", linewidth = 0.9) + # 添加黑色边框
-  geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd), width = 0.4, position = position_dodge(width = 0.9), linewidth = 0.9) + # 误差线加粗
-  geom_jitter(data = data_long, aes(x = Group, y = Value, color = Items), 
-             position = position_jitterdodge(jitter.width = 0.1, dodge.width = 0.7), alpha = 1, size = 2, color = "black") + # 抖动点为黑色
-  scale_fill_manual(labels = c("P1+P3", "N2+N4", "N1"), values = c('#66c2a5', '#fc8d62','#8da0cb')) + # 柔和的颜色
-  scale_x_discrete(labels = c("Positive",  "Blunted Affect", "Withdrawal")) + 
-  labs(x = element_blank(), y = "Item Score") +
-  theme_minimal() +
-  theme(panel.grid.major = element_blank(), # 移除主要网格线
-        panel.grid.minor = element_blank(), # 移除次要网格线
-        legend.position = "right", # 图例放在右侧
-        axis.line = element_line(linewidth = 0.9, color = "black"), # 黑色坐标轴线
-        axis.title = element_text(size=14),   # 轴标题大小和样式
-        axis.text = element_text(size=12, color="black"),  # 轴文本大小和颜色
-        axis.ticks = element_line(linewidth = 0.9, color = "black")) 
+
 
 
 

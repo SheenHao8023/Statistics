@@ -2,6 +2,7 @@ library(readxl)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
+library(complex)
 
 data <- read_excel("C:/Users/ASUS/Desktop/ITI.xlsx", col_names = TRUE)
 data <- data %>%
@@ -27,3 +28,10 @@ ggplot(data_summary, aes(x = ITI, y = mean, group = Participant, color = Partici
         axis.title = element_text(size=14),   # 轴标题大小和样式
         axis.text = element_text(size=12, color="black"),  # 轴文本大小和颜色
         axis.ticks = element_line(linewidth = 0.9, color = "black")) 
+
+dataRT <- data %>%
+  mutate(across(ITI1:ITI31, ~ifelse(is.na(.), 500, .)))
+for (i in 2:31) {
+  prev_col_name <- paste0("ITI", i - 1)
+  curr_col_name <- paste0("ITI", i)
+  dataRT[[curr_col_name]] <- dataRT[[curr_col_name]] + dataRT[[prev_col_name]]}

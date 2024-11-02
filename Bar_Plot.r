@@ -11,6 +11,8 @@ data <- data.frame(
   "A" = c(5, 3, 6, 10, 6, 3, 6, 7, 8, 3, 2, 5),
   "B" = c(4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 8),
   "C" = c(2, 1, 1, 1, 1, 1, 1, 2, 4, 2, 2, 3))
+row_sums <- apply(data, 1, sum)
+for (i in 1:nrow(data)) {data[i, ] <- data[i, ] / row_sums[i]}
 data$Group <- c(rep("Positive", 8), rep("Negative", 4))
 data_long <- data %>%
   pivot_longer(cols = -Group, names_to = "Metric", values_to = "Value")
@@ -21,14 +23,14 @@ levels(summary_data$Metric) <- c("A", "B", "C")
 summary_data$Group <- factor(summary_data$Group, levels = c("Positive", "Negative"))
 data_long$Group <- factor(data_long$Group, levels = c("Positive", "Negative"))
 summary_data$Metric <- factor(summary_data$Metric, levels = c("A", "B", "C"))
-ggplot(summary_data, aes(x = Metric, y = mean, fill = Group)) +
+ggplot(summary_data, aes(x = Group, y = mean, fill = Metric)) +
   geom_bar(stat = "identity", position = position_dodge(width = 0.9), width = 0.7, colour = "black", linewidth = 0.9) + # 添加黑色边框
   geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd), width = 0.4, position = position_dodge(width = 0.9), linewidth = 0.9) + # 误差线加粗
-  geom_jitter(data = data_long, aes(x = Metric, y = Value, color = Group), 
+  geom_jitter(data = data_long, aes(x = Group, y = Value, color = Metric), 
              position = position_jitterdodge(jitter.width = 0.1, dodge.width = 0.7), alpha = 1, size = 2, color = "black") + # 抖动点为黑色
-  scale_fill_manual(values = c('#fc8d62','#8da0cb')) + # 柔和的颜色
-  scale_x_discrete(labels = c( "P1+P3", "N2+N4", "N1")) + 
-  labs(x = element_blank(), y = "Item Score") +
+  scale_fill_manual(values = c('#66c2a5', '#fc8d62','#8da0cb'), name = "Items", labels = c("P1+P3", "N2+N4", "N1")) + #  "P1+P3", "N2+N4", "N1"
+  scale_x_discrete(labels = c("Positive", "Negative")) + 
+  labs(x = element_blank(), y = "Relative Score") +
   theme_minimal() +
   theme(panel.grid.major = element_blank(), # 移除主要网格线
         panel.grid.minor = element_blank(), # 移除次要网格线
@@ -38,14 +40,13 @@ ggplot(summary_data, aes(x = Metric, y = mean, fill = Group)) +
         axis.text = element_text(size=12, color="black"),  # 轴文本大小和颜色
         axis.ticks = element_line(linewidth = 0.9, color = "black")) 
 
-
-
-
 #三组的症状学
 data <- data.frame(
   "A" = c(5, 3, 6, 10, 6, 3, 6, 7, 8, 3, 2, 5),
   "B" = c(4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 8),
   "C" = c(2, 1, 1, 1, 1, 1, 1, 2, 4, 2, 2, 3))
+row_sums <- apply(data, 1, sum)
+for (i in 1:nrow(data)) {data[i, ] <- data[i, ] / row_sums[i]}
 data$Group <- c(rep("Positive", 8), rep("Blunted Affect", 2), rep("Withdrawal", 2))
 data_long <- data %>%
   pivot_longer(cols = -Group, names_to = "Metric", values_to = "Value")
@@ -56,14 +57,14 @@ levels(summary_data$Metric) <- c("A", "B", "C")
 summary_data$Group <- factor(summary_data$Group, levels = c("Positive", "Blunted Affect", "Withdrawal"))
 data_long$Group <- factor(data_long$Group, levels = c("Positive",  "Blunted Affect", "Withdrawal"))
 summary_data$Metric <- factor(summary_data$Metric, levels = c("A", "B", "C"))
-ggplot(summary_data, aes(x = Metric, y = mean, fill = Group)) +
+ggplot(summary_data, aes(x = Group, y = mean, fill = Metric)) +
   geom_bar(stat = "identity", position = position_dodge(width = 0.9), width = 0.7, colour = "black", linewidth = 0.9) + # 添加黑色边框
   geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd), width = 0.4, position = position_dodge(width = 0.9), linewidth = 0.9) + # 误差线加粗
-  geom_jitter(data = data_long, aes(x = Metric, y = Value, color = Group), 
+  geom_jitter(data = data_long, aes(x = Group, y = Value, color = Metric), 
              position = position_jitterdodge(jitter.width = 0.1, dodge.width = 0.7), alpha = 1, size = 2, color = "black") + # 抖动点为黑色
-  scale_fill_manual(values = c('#fc8d62','#e78ac3','#a6d854')) + # 柔和的颜色
-  scale_x_discrete(labels = c( "P1+P3", "N2+N4", "N1")) + 
-  labs(x = element_blank(), y = "Item Score") +
+  scale_fill_manual(values = c('#66c2a5', '#fc8d62','#8da0cb'), name = "Items", labels = c("P1+P3", "N2+N4", "N1")) + # 柔和的颜色
+  scale_x_discrete(labels = c("Positive", 'Blunted Affect', 'Withdrawal')) + 
+  labs(x = element_blank(), y = "Relative Score") +
   theme_minimal() +
   theme(panel.grid.major = element_blank(), # 移除主要网格线
         panel.grid.minor = element_blank(), # 移除次要网格线

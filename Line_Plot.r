@@ -72,30 +72,32 @@ ggplot(dataRT_summary, aes(x = RT, y = mean, group = Participant, color = Partic
 HC <- read_excel("C:/Users/ASUS/Desktop/ITI.xlsx", col_names = TRUE, sheet = 2)
 PS <- read_excel("C:/Users/ASUS/Desktop/ITI.xlsx", col_names = TRUE, sheet = 3)
 NS <- read_excel("C:/Users/ASUS/Desktop/ITI.xlsx", col_names = TRUE, sheet = 4)
-HC <- HC[, -(1:8)]
+HC <- HC[, -(1:7)]
+names(HC)[names(HC) %in% paste0("ITI", 8:31)] <- paste0("ITI", 1:24)
 HC_long <- HC %>%
-    pivot_longer(cols = ITI9:ITI31, names_to = "ITI", values_to = "Value") %>%
+    pivot_longer(cols = ITI1:ITI24, names_to = "ITI", values_to = "Value") %>%
     mutate(ITI = as.numeric(gsub("ITI", "", ITI)))
-set.seed(123) # 为了可重复性
-df <- data.frame(
-  group = rep(c("Group1", "Group2", "Group3"), each = 10),
-  x = rep(1:10, 3),
-  value = c(rnorm(10, 5, 2), rnorm(10, 7, 2), rnorm(10, 6, 2))
-)
-
-# 创建条形图，每组数据的条形图叠加在一起
-p <- ggplot(df, aes(x = x)) +
-  geom_bar(aes(y = value, fill = group), stat = "identity", position = "identity", width = 0.25) +
-  geom_smooth(aes(y = value, color = group, group = group), method = "loess", se = FALSE, aes(shape = group)) +
+PS <- PS[, -(1:7)]
+names(PS)[names(PS) %in% paste0("ITI", 8:31)] <- paste0("ITI", 1:24)
+PS_long <- PS %>%
+    pivot_longer(cols = ITI1:ITI24, names_to = "ITI", values_to = "Value") %>%
+    mutate(ITI = as.numeric(gsub("ITI", "", ITI)))
+NS <- NS[, -(1:7)]
+names(NS)[names(NS) %in% paste0("ITI", 8:31)] <- paste0("ITI", 1:24)
+NS_long <- NS %>%
+    pivot_longer(cols = ITI1:ITI24, names_to = "ITI", values_to = "Value") %>%
+    mutate(ITI = as.numeric(gsub("ITI", "", ITI)))
+combined_long <- bind_rows(mutate(HC_long, Group = "HC"),mutate(PS_long, Group = "PS"),mutate(NS_long, Group = "NS")) 
+ggplot(combined_long, aes(x = x)) +
+  geom_bar(aes(y = value, fill = Group), stat = "identity", position = "identity", width = 0.25) +
+  geom_smooth(aes(y = value, color = Group, group = Group), method = "loess", se = FALSE, aes(shape = Group)) +
   scale_fill_manual(values = c("Group1" = "red", "Group2" = "green", "Group3" = "blue")) + # 设置条形图颜色
   scale_color_manual(values = c("Group1" = "red", "Group2" = "green", "Group3" = "blue")) + # 设置趋势线颜色
   scale_shape_manual(values = c(1, 2, 3)) + # 设置趋势线形状
   labs(color = "Group", shape = "Group") + # 设置图例标题
   theme_minimal() + # 使用简洁主题
-  theme(legend.position = "bottom") # 设置图例位置
+  theme(legend.position = "right") # 设置图例位置
 
-# 显示图表
-print(p)
 
 
 

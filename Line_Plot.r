@@ -69,9 +69,9 @@ ggplot(dataRT_summary, aes(x = RT, y = mean, group = Participant, color = Partic
 
 
 #三组带趋势线的条形图
-HC <- read_excel("C:/Users/haox8/Desktop/ITI.xlsx", col_names = TRUE, sheet = 2)
-PS <- read_excel("C:/Users/haox8/Desktop/ITI.xlsx", col_names = TRUE, sheet = 3)
-NS <- read_excel("C:/Users/haox8/Desktop/ITI.xlsx", col_names = TRUE, sheet = 4)
+HC <- read_excel("C:/Users/ASUS/Desktop/ITI.xlsx", col_names = TRUE, sheet = 2)
+PS <- read_excel("C:/Users/ASUS/Desktop/ITI.xlsx", col_names = TRUE, sheet = 3)
+NS <- read_excel("C:/Users/ASUS/Desktop/ITI.xlsx", col_names = TRUE, sheet = 4)
 HC <- HC[, -(1:7)]
 names(HC)[names(HC) %in% paste0("ITI", 8:31)] <- paste0("ITI", 1:24)
 HC_long <- HC %>%
@@ -88,15 +88,14 @@ NS_long <- NS %>%
     pivot_longer(cols = ITI1:ITI24, names_to = "ITI", values_to = "Value") %>%
     mutate(ITI = as.numeric(gsub("ITI", "", ITI)))
 combined_long <- bind_rows(mutate(HC_long, Group = "HC"),mutate(PS_long, Group = "PS"),mutate(NS_long, Group = "NS")) 
-ggplot(combined_long, aes(x = x)) +
-  geom_bar(aes(y = value, fill = Group), stat = "identity", position = "identity", width = 0.25) +
-  geom_smooth(aes(y = value, color = Group, group = Group), method = "loess", se = FALSE, aes(shape = Group)) +
-  scale_fill_manual(values = c("Group1" = "red", "Group2" = "green", "Group3" = "blue")) + # 设置条形图颜色
-  scale_color_manual(values = c("Group1" = "red", "Group2" = "green", "Group3" = "blue")) + # 设置趋势线颜色
-  scale_shape_manual(values = c(1, 2, 3)) + # 设置趋势线形状
-  labs(color = "Group", shape = "Group") + # 设置图例标题
+ggplot(combined_long, aes(x = ITI, y = Value, fill = Group)) +
+  geom_bar(stat = "identity", position = "stack") + # 绘制堆叠条形图
+  geom_smooth(aes(color = Group, group = Group), method = "loess", se = FALSE) + # 为每组添加光滑趋势线
+  scale_fill_manual(values = c("HC" = "blue", "PS" = "green", "NS" = "red")) + # 设置堆叠条形图的颜色
+  scale_color_manual(values = c("HC" = "blue", "PS" = "green", "NS" = "red")) + # 设置趋势线的颜色
+  labs(fill = "Group", color = "Group") + # 设置图例标题
   theme_minimal() + # 使用简洁主题
-  theme(legend.position = "right") # 设置图例位置
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) # 旋转X轴标签以便阅读
 
 
 

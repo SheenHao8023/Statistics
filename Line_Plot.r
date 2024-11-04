@@ -69,9 +69,9 @@ ggplot(dataRT_summary, aes(x = RT, y = mean, group = Participant, color = Partic
 
 
 #三组带趋势线的条形图
-HC <- read_excel("C:/Users/ASUS/Desktop/ITI.xlsx", col_names = TRUE, sheet = 2)
-PS <- read_excel("C:/Users/ASUS/Desktop/ITI.xlsx", col_names = TRUE, sheet = 3)
-NS <- read_excel("C:/Users/ASUS/Desktop/ITI.xlsx", col_names = TRUE, sheet = 4)
+HC <- read_excel("C:/Users/haox8/Desktop/ITI.xlsx", col_names = TRUE, sheet = 2)
+PS <- read_excel("C:/Users/haox8/Desktop/ITI.xlsx", col_names = TRUE, sheet = 3)
+NS <- read_excel("C:/Users/haox8/Desktop/ITI.xlsx", col_names = TRUE, sheet = 4)
 HC <- HC[, -(1:7)]
 names(HC)[names(HC) %in% paste0("ITI", 8:31)] <- paste0("ITI", 1:24)
 HC_long <- HC %>%

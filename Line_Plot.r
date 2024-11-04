@@ -2,7 +2,7 @@ library(readxl)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
-library(complex)
+library(mgcv)
 
 #ITI 折线图
 data <- read_excel("C:/Users/ASUS/Desktop/ITI.xlsx", col_names = TRUE)
@@ -68,7 +68,7 @@ ggplot(dataRT_summary, aes(x = RT, y = mean, group = Participant, color = Partic
     scale_y_continuous(breaks = seq(0, 15000, 2500), labels = seq(0, 15000, 2500))
 
 
-#三组带趋势线的条形图
+#三组遮挡的带趋势线的条形图
 HC <- read_excel("C:/Users/ASUS/Desktop/ITI.xlsx", col_names = TRUE, sheet = 2)
 PS <- read_excel("C:/Users/ASUS/Desktop/ITI.xlsx", col_names = TRUE, sheet = 3)
 NS <- read_excel("C:/Users/ASUS/Desktop/ITI.xlsx", col_names = TRUE, sheet = 4)
@@ -88,17 +88,30 @@ NS_long <- NS %>%
     pivot_longer(cols = ITI1:ITI24, names_to = "ITI", values_to = "Value") %>%
     mutate(ITI = as.numeric(gsub("ITI", "", ITI)))
 combined_long <- bind_rows(mutate(HC_long, Group = "HC"),mutate(PS_long, Group = "PS"),mutate(NS_long, Group = "NS")) 
-ggplot(combined_long, aes(x = ITI, y = Value, fill = Group)) +
-  geom_bar(stat = "identity", position = "stack") + # 绘制堆叠条形图
-  geom_smooth(aes(color = Group, group = Group), method = "loess", se = FALSE) + # 为每组添加光滑趋势线
-  scale_fill_manual(values = c("HC" = "blue", "PS" = "green", "NS" = "red")) + # 设置堆叠条形图的颜色
-  scale_color_manual(values = c("HC" = "blue", "PS" = "green", "NS" = "red")) + # 设置趋势线的颜色
-  labs(fill = "Group", color = "Group") + # 设置图例标题
+combined_long_mean <- combined_long %>%
+  group_by(ITI, Group) %>%
+  summarise(Value = mean(Value, na.rm = TRUE)) %>%
+  ungroup()
+ggplot(combined_long_mean, aes(x = ITI)) +
+  geom_bar(data = filter(combined_long_mean, Group == "HC"),aes(y = Value, fill = Group), stat = "identity", position = "identity") +
+  geom_bar(data = filter(combined_long_mean, Group == "PS"),aes(y = Value, fill = Group), stat = "identity", position = "identity") +
+  geom_bar(data = filter(combined_long_mean, Group == "NS"),aes(y = Value, fill = Group), stat = "identity", position = "identity") +
+  geom_smooth(data = filter(combined_long_mean, Group == "HC"),aes(y = Value, color = Group),method = "loess", se = FALSE) +
+  geom_smooth(data = filter(combined_long_mean, Group == "PS"),aes(y = Value, color = Group),method = "loess", se = FALSE) +
+  geom_smooth(data = filter(combined_long_mean, Group == "NS"),aes(y = Value, color = Group),method = "loess", se = FALSE) +
+  scale_fill_manual(values = c("HC" = '#66c2a5', "PS" = '#fc8d62', "NS" = '#8da0cb')) + # 设置条形图颜色
+  scale_color_manual(values = c("HC" = 'black', "PS" = 'black', "NS" = 'black'), guide = "none") + # 设置趋势线颜色
+  labs(x = "ITI of role B", y = "Time (ms)", fill = "Participant") + # 设置图例标题
   theme_minimal() + # 使用简洁主题
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) # 旋转X轴标签以便阅读
-
-
-
+theme(panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank(), 
+          legend.position = "right", 
+          axis.line = element_line(linewidth = 0.9, color = "black"), 
+          axis.title = element_text(size=14),   
+          axis.text = element_text(size=12, color="black"),  
+          axis.ticks = element_line(linewidth = 0.9, color = "black")) +
+coord_cartesian (ylim = c (350,550)) +
+scale_x_continuous(breaks = seq(0, 24, 6), labels = seq(0, 24, 6))
 
 
 

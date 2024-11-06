@@ -36,12 +36,12 @@ angles = [119.8485291,119.6215227,110.3535899,114.4678818,
 for i, angle in enumerate(angles):
     circle_index = i // 2  # 确定圆的索引
     r = inner_r + circle_index * distance
-    if i % 2 == 0:  
+    if i % 2 == 0:  # 偶数索引绘制红色弧线
         color = "#f47c7c"
-        draw_arc(r, angle, color) 
-    else:  
+        draw_arc(r, angle, color) # 
+    else:  # 奇数索引绘制绿色弧线
         color = "#80d6ff"
-        draw_arc(r, -angle, color) 
+        draw_arc(r, -angle, color) # 
 
 pen.hideturtle() # 隐藏画笔
-screen.mainloop() # 保持窗口打开直到用户关闭
+screen.mainloop()    

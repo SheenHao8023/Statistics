@@ -4,7 +4,6 @@ library(tidyr)
 library(ggplot2)
 library(ggalt)
 library(gsignal)
-c
 
 #ITI 折线图
 data <- read_excel("C:/Users/ASUS/Desktop/ITI.xlsx", col_names = TRUE)
@@ -92,9 +91,8 @@ NS_long <- NS %>%
 combined_long <- bind_rows(mutate(HC_long, Group = "HC"),mutate(PS_long, Group = "PS"),mutate(NS_long, Group = "NS")) 
 combined_long_mean <- combined_long %>%
   group_by(ITI, Group) %>%
-  summarise(Value = mean(Value, na.rm = TRUE)) %>%
-  ungroup()
-ggplot(combined_long_mean, aes(x = ITI)) +
+  summarise(Value = mean(Value, na.rm = TRUE), .groups = 'drop')
+ggplot(combined_long_mean, aes(x = ITI, y = Value)) +
   geom_bar(data = filter(combined_long_mean, Group == "HC"),aes(y = Value, fill = Group), alpha = 0.8, stat = "identity", position = "identity") +
   geom_bar(data = filter(combined_long_mean, Group == "PS"),aes(y = Value, fill = Group), alpha = 0.8, stat = "identity", position = "identity") +
   geom_bar(data = filter(combined_long_mean, Group == "NS"),aes(y = Value, fill = Group), alpha = 0.8, stat = "identity", position = "identity") +

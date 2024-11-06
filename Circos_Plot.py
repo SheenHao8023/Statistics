@@ -1,20 +1,18 @@
 import turtle
-import random
 
 screen = turtle.Screen()
 screen.bgcolor("white")
 pen = turtle.Turtle()
 pen.speed(0)  # 设置画笔速度
 pen.width(2)  # 设置画笔宽度为2
-# 定义绘制单个圆的函数
-def draw_circle(radius):
+
+def draw_circle(radius):  # 定义绘制单个圆的函数
     pen.color("gray")
     pen.penup()  # 抬起画笔
     pen.goto(0, -radius)  # 移动到圆的底部中心点
     pen.pendown()  # 放下画笔
     pen.circle(radius)
-# 定义绘制弧线的函数
-def draw_arc(radius, angle, color):
+def draw_arc(radius, angle, color): # 定义绘制弧线的函数
     pen.color(color)
     pen.penup()
     pen.goto(0, -radius)
@@ -23,11 +21,10 @@ def draw_arc(radius, angle, color):
 
 inner_r = 50  # 最内圈圆的半径
 distance = 30  # 同心圆之间的距离
-# 绘制八个同心圆
-r = inner_r
+
 for _ in range(8):
-    draw_circle(r)
-    r += distance
+    draw_circle(inner_r)
+    inner_r += distance
 angles = [119.8485291,119.6215227,110.3535899,114.4678818,
           106.6020483,97.46297979,121.0351807,120.4199648,
           126.738442,128.7014431,121.4277557,119.3288587,

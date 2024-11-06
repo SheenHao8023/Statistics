@@ -93,12 +93,12 @@ combined_long_mean <- combined_long %>%
   group_by(ITI, Group) %>%
   summarise(Value = mean(Value, na.rm = TRUE), .groups = 'drop')
 ggplot(combined_long_mean, aes(x = ITI, y = Value)) +
-  geom_bar(data = filter(combined_long_mean, Group == "HC"),aes(y = Value, fill = Group), alpha = 0.8, stat = "identity", position = "identity") +
-  geom_bar(data = filter(combined_long_mean, Group == "PS"),aes(y = Value, fill = Group), alpha = 0.8, stat = "identity", position = "identity") +
-  geom_bar(data = filter(combined_long_mean, Group == "NS"),aes(y = Value, fill = Group), alpha = 0.8, stat = "identity", position = "identity") +
-  geom_smooth(data = filter(combined_long_mean, Group == "HC"),aes(y = Value, color = Group),method = "loess", se = FALSE) +
-  geom_smooth(data = filter(combined_long_mean, Group == "PS"),aes(y = Value, color = Group),method = "loess", se = FALSE) +
-  geom_smooth(data = filter(combined_long_mean, Group == "NS"),aes(y = Value, color = Group),method = "loess", se = FALSE) +
+  geom_bar(data = dplyr::filter(combined_long_mean, Group == "HC"),aes(y = Value, fill = Group), alpha = 0.8, stat = "identity", position = "identity") +
+  geom_bar(data = dplyr::filter(combined_long_mean, Group == "PS"),aes(y = Value, fill = Group), alpha = 0.8, stat = "identity", position = "identity") +
+  geom_bar(data = dplyr::filter(combined_long_mean, Group == "NS"),aes(y = Value, fill = Group), alpha = 0.8, stat = "identity", position = "identity") +
+  geom_smooth(data = dplyr::filter(combined_long_mean, Group == "HC"),aes(y = Value, color = Group),method = "loess", se = FALSE) +
+  geom_smooth(data = dplyr::filter(combined_long_mean, Group == "PS"),aes(y = Value, color = Group),method = "loess", se = FALSE) +
+  geom_smooth(data = dplyr::filter(combined_long_mean, Group == "NS"),aes(y = Value, color = Group),method = "loess", se = FALSE) +
   scale_fill_manual(values = c("HC" = '#66c2a5', "PS" = '#fc8d62', "NS" = '#8da0cb')) + # 设置条形图颜色
   scale_color_manual(values = c("HC" = '#66c2a5', "PS" = '#fc8d62', "NS" = '#8da0cb'), guide = "none") + # 设置趋势线颜色
   labs(x = "ITI of role B", y = "Time (ms)", fill = "Participant") + # 设置图例标题
@@ -115,9 +115,9 @@ scale_x_continuous(breaks = seq(0, 24, 6), labels = seq(0, 24, 6))
 
 #三组填充颜色的折线图
 ggplot(combined_long_mean, aes(x = ITI)) +
-  geom_area(data = filter(combined_long_mean, Group == "HC"),aes(y = Value, fill = "HC"), alpha = 0.8) +
-  geom_area(data = filter(combined_long_mean, Group == "PS"),aes(y = Value, fill = "PS"), alpha = 0.8) +
-  geom_area(data = filter(combined_long_mean, Group == "NS"),aes(y = Value, fill = "NS"), alpha = 0.8) +
+  geom_area(data = dplyr::filter(combined_long_mean, Group == "HC"),aes(y = Value, fill = "HC"), alpha = 0.8) +
+  geom_area(data = dplyr::filter(combined_long_mean, Group == "PS"),aes(y = Value, fill = "PS"), alpha = 0.8) +
+  geom_area(data = dplyr::filter(combined_long_mean, Group == "NS"),aes(y = Value, fill = "NS"), alpha = 0.8) +
   scale_fill_manual(values = c("HC" = '#66c2a5', "PS" = '#fc8d62', "NS" = '#8da0cb')) +
   labs(x = "ITI of role B", y = "Time (ms)", fill = "Participant") +
   theme_minimal() +

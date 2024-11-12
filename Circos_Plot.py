@@ -4,7 +4,7 @@ screen = turtle.Screen()
 screen.bgcolor("white")
 pen = turtle.Turtle()
 pen.speed(0)  # 设置画笔速度
-pen.width(2)  # 设置画笔宽度为2
+pen.width(4)  # 设置画笔宽度为2
 
 def draw_circle(radius):  # 定义绘制单个圆的函数
     pen.color("white")

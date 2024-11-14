@@ -58,22 +58,32 @@ ggplot(data_long, aes(x = factor(Condition), y = value))+
   labs(x='Hearing B', y="Consistency") 
 
 #Time series
+# 读取数据
 data_time <- read_excel("C:/Users/ASUS/Desktop/Consistency.xlsx", col_names = TRUE, sheet = 2)
+
+# 将数据转换为长格式
 data_long <- data_time %>%
-    pivot_longer(cols = T1:T15, names_to = "Time", values_to = "Value") %>%
+  pivot_longer(cols = T1:T15, names_to = "Time", values_to = "Value")
+
+# 计算均值和标准差，按 Time 分组
 data_summary <- data_long %>%
-    summarise(mean = mean(Value, na.rm = TRUE), sd = sd(Value, na.rm = TRUE),
-              ymin = mean - sd, ymax = mean + sd, .groups = "drop")
+  group_by(Time) %>%
+  summarise(mean = mean(Value, na.rm = TRUE), 
+            sd = sd(Value, na.rm = TRUE),
+            ymin = mean - sd, ymax = mean + sd, 
+            .groups = "drop")
+
+# 绘制折线图，并带有1个标准差的阴影
 ggplot(data_summary, aes(x = Time, y = mean)) +
-    geom_line(aes(color = Participant), size = 1.5) +
-    geom_ribbon(aes(ymin = ymin, ymax = ymax), alpha = 0.4, color = "transparent", size = 0) +
-    labs(x = "Time", y = "Consistency") +
-    theme_minimal() +
-    theme(panel.grid.major = element_blank(), 
-          panel.grid.minor = element_blank(), 
-          legend.position = "right", 
-          axis.line = element_line(linewidth = 0.9, color = "black"), 
-          axis.title = element_text(size=14),   
-          axis.text = element_text(size=12, color="black"),  
-          axis.ticks = element_line(linewidth = 0.9, color = "black"))
+  geom_line(color = "blue", size = 1.5) +
+  geom_ribbon(aes(ymin = ymin, ymax = ymax), fill = "blue", alpha = 0.2) +
+  labs(x = "Time", y = "Consistency") +
+  theme_minimal() +
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        legend.position = "right", 
+        axis.line = element_line(linewidth = 0.9, color = "black"), 
+        axis.title = element_text(size=14),   
+        axis.text = element_text(size=12, color="black"),  
+        axis.ticks = element_line(linewidth = 0.9, color = "black"))
 

@@ -58,25 +58,16 @@ ggplot(data_long, aes(x = factor(Condition), y = value))+
   labs(x='Hearing B', y="Consistency") 
 
 #Time series
-# 读取数据
 data_time <- read_excel("C:/Users/ASUS/Desktop/Consistency.xlsx", col_names = TRUE, sheet = 2)
-
-# 将数据转换为长格式
-data_long <- data_time %>%
-  pivot_longer(cols = T1:T15, names_to = "Time", values_to = "Value")
-
-# 计算均值和标准差，按 Time 分组
-data_summary <- data_long %>%
-  group_by(Time) %>%
-  summarise(mean = mean(Value, na.rm = TRUE), 
-            sd = sd(Value, na.rm = TRUE),
-            ymin = mean - sd, ymax = mean + sd, 
-            .groups = "drop")
-
-# 绘制折线图，并带有1个标准差的阴影
-ggplot(data_summary, aes(x = Time, y = mean)) +
+data_summary <- data_time %>%
+  summarise(across(everything(), list(mean = ~mean(.x, na.rm = TRUE), sd = ~sd(.x, na.rm = TRUE)))) %>%
+  pivot_longer(cols = everything(), names_to = c('Time', '.value'), names_sep = '_')
+data_summary <- data_summary %>%
+  mutate(ymin = mean-sd, ymax = mean+sd)
+data_summary$Time = factor(data_summary$Time, levels = unique(data_summary$Time))
+ggplot(data_summary, aes(x = Time, y = mean, group = 1)) +
   geom_line(color = "blue", size = 1.5) +
-  geom_ribbon(aes(ymin = ymin, ymax = ymax), fill = "blue", alpha = 0.2) +
+  geom_ribbon(data = data_summary %>% filter(!is.na(sd)), aes(ymin = ymin, ymax = ymax), fill = "blue", alpha = 0.2) +
   labs(x = "Time", y = "Consistency") +
   theme_minimal() +
   theme(panel.grid.major = element_blank(), 

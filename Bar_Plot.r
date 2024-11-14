@@ -30,7 +30,7 @@ ggplot(summary_data, aes(x = Group, y = mean, fill = Metric)) +
   geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd), width = 0.4, position = position_dodge(width = 0.9), linewidth = 0.9) + # 误差线加粗
   geom_jitter(data = data_long, aes(x = Group, y = Value, color = Metric), 
              position = position_jitterdodge(jitter.width = 0.1, dodge.width = 0.7), alpha = 1, size = 2, color = "black") + # 抖动点为黑色
-  scale_fill_manual(values = c('#66c2a5', '#fc8d62','#8da0cb'), name = "Items", labels = c("(P1+P3)/2", "(N2+N4)/2", "N1")) + #  "P1+P3", "N2+N4", "N1"
+  scale_fill_manual(values = c('#66c2a5', '#fc8d62','#8da0cb'), name = "Items", labels = c("P1+P3", "N2+N4", "2N1")) + #  "P1+P3", "N2+N4", "N1"
   scale_x_discrete(labels = c("Positive", "Negative")) + 
   labs(x = element_blank(), y = "Relative Scores") +
   theme_minimal() +
@@ -66,7 +66,7 @@ ggplot(summary_data, aes(x = Group, y = mean, fill = Metric)) +
   geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd), width = 0.4, position = position_dodge(width = 0.9), linewidth = 0.9) + # 误差线加粗
   geom_jitter(data = data_long, aes(x = Group, y = Value, color = Metric), 
              position = position_jitterdodge(jitter.width = 0.1, dodge.width = 0.7), alpha = 1, size = 2, color = "black") + # 抖动点为黑色
-  scale_fill_manual(values = c('#66c2a5', '#fc8d62','#8da0cb'), name = "Items", labels = c("(P1+P3)/2", "(N2+N4)/2", "N1")) + # 柔和的颜色
+  scale_fill_manual(values = c('#66c2a5', '#fc8d62','#8da0cb'), name = "Items", labels = c("P1+P3", "N2+N4", "2N1")) + # 柔和的颜色
   scale_x_discrete(labels = c("Positive", 'Blunted Affect', 'Withdrawal')) + 
   labs(x = element_blank(), y = "Relative Scores") +
   theme_minimal() +

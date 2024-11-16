@@ -3,6 +3,7 @@ title: "Results_Freq"
 author: "XinHao"
 date: "2024-11-16"
 output:
+  pdf_document: xelatex
   html_document:
     df_print: paged
 ---

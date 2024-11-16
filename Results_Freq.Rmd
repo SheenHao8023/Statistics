@@ -1,0 +1,117 @@
+---
+title: "Results_Freq"
+author: "XinHao"
+date: "2024-11-16"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+# Target1: The advantage of combination ABM with tDCS 
+# Target2: Baseline state affects the effect of intervention (influencing factor)
+# Target3: The mechanism
+
+library(readxl)
+library(bruceR)
+library(dplyr)
+
+data <- read_excel("C:/Users/haox8/Desktop/rawdata.xlsx", col_names = TRUE)
+data %>% mutate_at(c('Group', 'Type', 'Gender'), as.factor)
+
+#Q:trait anxiety should be used as a covariate or not?
+
+# Time(Pre/Post) as independent variable, 3*2*2 factors
+AnxModel = MANOVA(data, subID = 'ID', dvs = c('Anx1', 'Anx2'), dvs.pattern = 'Anx(.)',
+                  between=c("Group", "Type"), within = 'Time', cov = c('Gender', 'Age'),
+                  sph.correction = "GG", aov.include = FALSE, digits = 3)   %>%
+    # The intervention effect of three groups
+    EMMEANS(effect = "Time", by = 'Group', contrast = "pairwise", 
+            p.adjust = "fdr",model.type = "multivariate",digits = 3)   %>%
+    # The intervention effect of three groups × two types
+    EMMEANS(effect = "Time", by = c('Group', 'Type'), contrast = "pairwise", 
+            p.adjust = "fdr",model.type = "multivariate",digits = 3)   %>%
+    # The interaction: independent variable is mean(Pre+Post)
+    EMMEANS(effect = "Group", by = 'Type', contrast = "pairwise", 
+            p.adjust = "fdr",model.type = "multivariate",digits = 3)   %>%
+    EMMEANS(effect = "Type", by = 'Group', contrast = "pairwise", 
+            p.adjust = "fdr",model.type = "multivariate",digits = 3)   %>%
+    #'Time' as a factor
+    EMMEANS(effect = c("Group", 'Type'), by = 'Time', contrast = "pairwise", 
+            p.adjust = "fdr",model.type = "multivariate",digits = 3)   %>%
+    #'Time' as a effector
+    # only the items included 'Time2 - Time1' is meaningful
+    EMMEANS(effect = c("Group", 'Time'), by = 'Type', contrast = "pairwise", 
+            p.adjust = "fdr",model.type = "multivariate",digits = 3)   %>%
+    EMMEANS(effect = c("Type", 'Time'), by = 'Group', contrast = "pairwise", 
+            p.adjust = "fdr",model.type = "multivariate",digits = 3) 
+DepModel = MANOVA(data, subID = 'ID', dvs = c('Dep1', 'Dep2'), dvs.pattern = 'Dep(.)',
+                  between=c("Group", "Type"), within = 'Time', cov = c('Gender', 'Age'),
+                  sph.correction = "GG", aov.include = FALSE, digits = 3)   %>%
+    EMMEANS(effect = "Time", by = 'Group', contrast = "pairwise", 
+            p.adjust = "fdr",model.type = "multivariate",digits = 3)   %>%
+    EMMEANS(effect = "Time", by = c('Group', 'Type'), contrast = "pairwise", 
+            p.adjust = "fdr",model.type = "multivariate",digits = 3)   %>%
+    EMMEANS(effect = "Group", by = 'Type', contrast = "pairwise", 
+            p.adjust = "fdr",model.type = "multivariate",digits = 3)   %>%
+    EMMEANS(effect = "Type", by = 'Group', contrast = "pairwise", 
+            p.adjust = "fdr",model.type = "multivariate",digits = 3)   %>%
+    EMMEANS(effect = c("Group", 'Type'), by = 'Time', contrast = "pairwise", 
+            p.adjust = "fdr",model.type = "multivariate",digits = 3)   %>%
+    EMMEANS(effect = c("Group", 'Time'), by = 'Type', contrast = "pairwise", 
+            p.adjust = "fdr",model.type = "multivariate",digits = 3)   %>%
+    EMMEANS(effect = c("Type", 'Time'), by = 'Group', contrast = "pairwise", 
+            p.adjust = "fdr",model.type = "multivariate",digits = 3) 
+BiasModel = MANOVA(data, subID = 'ID', dvs = c('Bias1', 'Bias2'), dvs.pattern = 'Bias(.)',
+                  between=c("Group", "Type"), within = 'Time', cov = c('Gender', 'Age'),
+                  sph.correction = "GG", aov.include = FALSE, digits = 3)   %>%
+    EMMEANS(effect = "Time", by = 'Group', contrast = "pairwise", 
+            p.adjust = "fdr",model.type = "multivariate",digits = 3)   %>%
+    EMMEANS(effect = "Time", by = c('Group', 'Type'), contrast = "pairwise", 
+            p.adjust = "fdr",model.type = "multivariate",digits = 3)   %>%
+    EMMEANS(effect = "Group", by = 'Type', contrast = "pairwise", 
+            p.adjust = "fdr",model.type = "multivariate",digits = 3)   %>%
+    EMMEANS(effect = "Type", by = 'Group', contrast = "pairwise", 
+            p.adjust = "fdr",model.type = "multivariate",digits = 3)   %>%
+    EMMEANS(effect = c("Group", 'Type'), by = 'Time', contrast = "pairwise", 
+            p.adjust = "fdr",model.type = "multivariate",digits = 3)   %>%
+    EMMEANS(effect = c("Group", 'Time'), by = 'Type', contrast = "pairwise", 
+            p.adjust = "fdr",model.type = "multivariate",digits = 3)   %>%
+    EMMEANS(effect = c("Type", 'Time'), by = 'Group', contrast = "pairwise", 
+            p.adjust = "fdr",model.type = "multivariate",digits = 3) 
+
+#Diff as dependent variable, 3*2 factors
+AnxModel = MANOVA(data, subID = 'ID', dv = "DiffAnx",
+                  between=c("Group", "Type"), cov = c('Gender', 'Age'),
+                  sph.correction = "GG", aov.include = FALSE, digits = 3)   %>%
+    # The interaction: independent variable is difference(Pre-Post)
+    EMMEANS(effect = "Group", by = 'Type', contrast = "pairwise", 
+            p.adjust = "fdr",model.type = "multivariate",digits = 3)   %>%
+    EMMEANS(effect = "Type", by = 'Group', contrast = "pairwise", 
+            p.adjust = "fdr",model.type = "multivariate",digits = 3)
+DepModel = MANOVA(data, subID = 'ID', dv = "DiffDep",
+                  between=c("Group", "Type"), cov = c('Gender', 'Age'),
+                  sph.correction = "GG", aov.include = FALSE, digits = 3)   %>%
+    EMMEANS(effect = "Group", by = 'Type', contrast = "pairwise", 
+            p.adjust = "fdr",model.type = "multivariate",digits = 3)   %>%
+    EMMEANS(effect = "Type", by = 'Group', contrast = "pairwise", 
+            p.adjust = "fdr",model.type = "multivariate",digits = 3)
+BiasModel = MANOVA(data, subID = 'ID', dv = "DiffBias",
+                  between=c("Group", "Type"), cov = c('Gender', 'Age'),
+                  sph.correction = "GG", aov.include = FALSE, digits = 3)   %>%
+    EMMEANS(effect = "Group", by = 'Type', contrast = "pairwise", 
+            p.adjust = "fdr",model.type = "multivariate",digits = 3)   %>%
+    EMMEANS(effect = "Type", by = 'Group', contrast = "pairwise", 
+            p.adjust = "fdr",model.type = "multivariate",digits = 3)
+
+```

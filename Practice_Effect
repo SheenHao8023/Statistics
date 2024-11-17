@@ -75,6 +75,7 @@ ggplot(data_summary, aes(x = Time, y = mean, group = 1)) +
   labs(x = "Time", y = "Consistency") +
   theme_minimal() +
   theme_prism(axis_text_angle = 45) + 
+  coord_cartesian(ylim = c(0, 1)) +
   theme(panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank(), 
         legend.position = "right", 
@@ -149,11 +150,12 @@ data_summary <- data_summary %>%
   mutate(ymin = mean-sd, ymax = mean+sd)
 data_summary$Time = factor(data_summary$Time, levels = unique(data_summary$Time))
 ggplot(data_summary, aes(x = Time, y = mean, group = 1)) +
-  geom_line(color = "#f47c7c", size = 1.5) +
+  geom_line(color = "#80d6ff", size = 1.5) +
   geom_ribbon(data = data_summary %>% filter(!is.na(sd)), aes(ymin = ymin, ymax = ymax), fill = "#80d6ff", alpha = 0.2) +
   labs(x = "Time", y = "Stability") +
   theme_minimal() +
   theme_prism(axis_text_angle = 45) + 
+  coord_cartesian(ylim = c(0, 0.2)) +
   theme(panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank(), 
         legend.position = "right", 

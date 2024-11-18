@@ -5,6 +5,9 @@ library(ggplot2)
 library(ggprism)
 
 data <- read_excel("C:/Users/haox8/Desktop/Consistency.xlsx", col_names = TRUE)
+MANOVA(data, dvs = "B1C1:B5C3", dvs.pattern = "B(.)C(.)", 
+        within = c("Block", "Condition"), 
+        ss.type = "III", sph.correction = "GG", aov.include = FALSE, digits = 3)
 
 data_condition <- data %>% select(ends_with("C1"))
 data_long <- data_condition %>%
@@ -85,6 +88,9 @@ ggplot(data_summary, aes(x = Time, y = mean, group = 1)) +
         axis.ticks = element_line(linewidth = 0.9, color = "black"))
 
 data <- read_excel("C:/Users/haox8/Desktop/Stability.xlsx", col_names = TRUE)
+MANOVA(data, dvs = "B1C1:B5C3", dvs.pattern = "B(.)C(.)", 
+        within = c("Block", "Condition"), 
+        ss.type = "III", sph.correction = "GG", aov.include = FALSE, digits = 3)
 
 data_condition <- data %>% select(ends_with("C1"))
 data_long <- data_condition %>%

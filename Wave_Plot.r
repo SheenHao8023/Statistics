@@ -17,7 +17,7 @@ y2_adjusted <- y2_adjusted + 1.5
 data <- data.frame(x = rep(x, 2),y = c(y1, y2_adjusted),Participant = rep(c("Role A", "Role B"), each = length(x)))
 phase_shade_in = data.frame(xmin = 0.5, xmax = 2, ymin = -0.5, ymax = 3)
 phase_shade_out = data.frame(xmin = 5.5, xmax = 7, ymin = -0.5, ymax = 3)
-ggplot(data, aes(x = x, y = y, color = Participant, group = Participant)) +
+ggplot(data[data$x<=8, ], aes(x = x, y = y, color = Participant, group = Participant)) +
     geom_rect(data = phase_shade_in, aes(xmin = xmin, xmax=xmax, ymin=ymin, ymax=ymax),fill = 'gray',alpha = 0.7, inherit.aes = FALSE)+
     geom_rect(data = phase_shade_out, aes(xmin = xmin, xmax=xmax, ymin=ymin, ymax=ymax),fill = 'gray',alpha = 0.7, inherit.aes = FALSE)+
     geom_line(size = 1.5) + # 设置线的宽度

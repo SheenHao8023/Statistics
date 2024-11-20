@@ -17,7 +17,7 @@ y2_adjusted <- y2_adjusted + 1.5
 data <- data.frame(x = rep(x, 2),y = c(y1, y2_adjusted),Participant = rep(c("Role A", "Role B"), each = length(x)))
 phase_shade_in = data.frame(xmin = 0.5, xmax = 2, ymin = -0.5, ymax = 3)
 phase_shade_out = data.frame(xmin = 5.5, xmax = 7, ymin = -0.5, ymax = 3)
-ggplot(data[data$x<=8, ], aes(x = x, y = y, color = Participant, group = Participant)) +
+ggplot(data[data$x<=9, ], aes(x = x, y = y, color = Participant, group = Participant)) +
     geom_rect(data = phase_shade_in, aes(xmin = xmin, xmax=xmax, ymin=ymin, ymax=ymax),fill = 'gray',alpha = 0.7, inherit.aes = FALSE)+
     geom_rect(data = phase_shade_out, aes(xmin = xmin, xmax=xmax, ymin=ymin, ymax=ymax),fill = 'gray',alpha = 0.7, inherit.aes = FALSE)+
     geom_line(size = 1.5) + # 设置线的宽度
@@ -32,4 +32,5 @@ ggplot(data[data$x<=8, ], aes(x = x, y = y, color = Participant, group = Partici
         axis.title = element_text(size = 14), # 坐标轴标题大小
         legend.position = c(0.85, 0.85) , # 图例位置
         plot.title = element_blank() ) +
-    coord_cartesian(ylim = c(-0.5, 3), xlim = c(0, 9)) # 限制y轴范围，并尽量保留右下角空白
+    coord_cartesian(ylim = c(-0.5, 3), xlim = c(0, 9)) +# 限制y轴范围，并尽量保留右下角空白
+    geom_rect(xmin = 8, xmax = 9, ymin=3, ymax=4, fill = 'white', color='white', size=1.5)

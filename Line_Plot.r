@@ -25,7 +25,7 @@ ggplot(data_summary, aes(x = ITI, y = mean, group = Participant, color = Partici
     theme_minimal() +
     theme(panel.grid.major = element_blank(), 
           panel.grid.minor = element_blank(), 
-          legend.position = "right", 
+          legend.position = c(0.85, 0.85), 
           axis.line = element_line(linewidth = 0.9, color = "black"), 
           axis.title = element_text(size=14),   
           axis.text = element_text(size=12, color="black"),  

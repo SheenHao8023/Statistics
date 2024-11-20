@@ -22,14 +22,14 @@ ggplot(data[data$x<=9, ], aes(x = x, y = y, color = Participant, group = Partici
     geom_rect(data = phase_shade_out, aes(xmin = xmin, xmax=xmax, ymin=ymin, ymax=ymax),fill = 'gray',alpha = 0.7, inherit.aes = FALSE)+
     geom_line(size = 1.5) + # 设置线的宽度
     scale_color_manual(values = c("Role A" = "#80d6ff", "Role B" = "#f47c7c")) + # 设置颜色
-    labs(x = "Time", y = "Phase Angle", color = "Participant") +
+    labs(x = "Time Series", y = "Phase Angle", color = "Participant") +
     theme_minimal() +
     theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
-        axis.text = element_blank(), # 去除刻度文字
-        axis.ticks = element_blank(), # 去除刻度线
         axis.line = element_line(linewidth = 0.9, color = "black"), # 坐标轴
         axis.title = element_text(size = 14), # 坐标轴标题大小
+        axis.text = element_text(size=12, color='black'),
+        axis.ticks=element_line(linewidth = 0.9,color='black'),
         legend.position = c(0.85, 0.85) , # 图例位置
         plot.title = element_blank() ) +
     coord_cartesian(ylim = c(-0.5, 3), xlim = c(0, 9)) +# 限制y轴范围，并尽量保留右下角空白

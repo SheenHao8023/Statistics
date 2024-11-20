@@ -21,7 +21,7 @@ ggplot(data_summary, aes(x = ITI, y = mean, group = Participant, color = Partici
     geom_ribbon(aes(ymin = ymin, ymax = ymax, fill = Participant), alpha = 0.4, color = "transparent", size = 0) +
     scale_color_manual(values = c("Role A"="#80d6ff","Role B"='#f47c7c')) +
     scale_fill_manual(values = c("Role A"='#80d6ff',"Role B"='#f47c7c')) +
-    labs(x = "ITI of dyads", y = "Time (ms)") +
+    labs(x = "ITI of Dyads", y = "Time (ms)") +
     theme_minimal() +
     theme(panel.grid.major = element_blank(), 
           panel.grid.minor = element_blank(), 
@@ -30,6 +30,7 @@ ggplot(data_summary, aes(x = ITI, y = mean, group = Participant, color = Partici
           axis.title = element_text(size=14),   
           axis.text = element_text(size=12, color="black"),  
           axis.ticks = element_line(linewidth = 0.9, color = "black")) +
+    geom_rect(aes(xmin=26, xmax=32,ymin=620,ymax=720), fill = 'white', color='white', size=1.5)+
     geom_vline(xintercept = 8, linetype = "dashed", color = "black", size = 0.9) +  # 添加X=8的垂直线
     scale_x_continuous(breaks = c(0, 8, 16, 24, 32))  # 设置横坐标刻度
 
@@ -88,29 +89,33 @@ names(NS)[names(NS) %in% paste0("ITI", 8:31)] <- paste0("ITI", 1:24)
 NS_long <- NS %>%
     pivot_longer(cols = ITI1:ITI24, names_to = "ITI", values_to = "Value") %>%
     mutate(ITI = as.numeric(gsub("ITI", "", ITI)))
-combined_long <- bind_rows(mutate(HC_long, Group = "HC"),mutate(PS_long, Group = "PS"),mutate(NS_long, Group = "NS")) 
+combined_long <- bind_rows(
+    mutate(HC_long, Group = factor("HC", levels = c('HC', 'PS', 'NS'))),
+    mutate(PS_long, Group = factor("PS", levels = c('HC', 'PS', 'NS'))),
+    mutate(NS_long, Group = factor("NS", levels = c('HC', 'PS', 'NS'))))
 combined_long_mean <- combined_long %>%
   group_by(ITI, Group) %>%
   summarise(Value = mean(Value, na.rm = TRUE), .groups = 'drop')
 ggplot(combined_long_mean, aes(x = ITI, y = Value)) +
-  geom_bar(data = dplyr::filter(combined_long_mean, Group == "HC"),aes(y = Value, fill = Group), alpha = 0.8, stat = "identity", position = "identity") +
-  geom_bar(data = dplyr::filter(combined_long_mean, Group == "PS"),aes(y = Value, fill = Group), alpha = 0.8, stat = "identity", position = "identity") +
-  geom_bar(data = dplyr::filter(combined_long_mean, Group == "NS"),aes(y = Value, fill = Group), alpha = 0.8, stat = "identity", position = "identity") +
-  geom_smooth(data = dplyr::filter(combined_long_mean, Group == "HC"),aes(y = Value, color = Group),method = "loess", se = FALSE) +
-  geom_smooth(data = dplyr::filter(combined_long_mean, Group == "PS"),aes(y = Value, color = Group),method = "loess", se = FALSE) +
-  geom_smooth(data = dplyr::filter(combined_long_mean, Group == "NS"),aes(y = Value, color = Group),method = "loess", se = FALSE) +
+  geom_bar(data = dplyr::filter(combined_long_mean, Group == "HC"),aes(y = Value, fill = Group), alpha = 1, stat = "identity", position = "identity") +
+  geom_bar(data = dplyr::filter(combined_long_mean, Group == "PS"),aes(y = Value, fill = Group), alpha = 1, stat = "identity", position = "identity") +
+  geom_bar(data = dplyr::filter(combined_long_mean, Group == "NS"),aes(y = Value, fill = Group), alpha = 1, stat = "identity", position = "identity") +
+  geom_smooth(data = dplyr::filter(combined_long_mean, Group == "HC"),aes(y = Value+50, color = Group),method = "loess", se = FALSE) +
+  geom_smooth(data = dplyr::filter(combined_long_mean, Group == "PS"),aes(y = Value+50, color = Group),method = "loess", se = FALSE) +
+  geom_smooth(data = dplyr::filter(combined_long_mean, Group == "NS"),aes(y = Value+50, color = Group),method = "loess", se = FALSE) +
   scale_fill_manual(values = c("HC" = '#66c2a5', "PS" = '#fc8d62', "NS" = '#8da0cb')) + # 设置条形图颜色
-  scale_color_manual(values = c("HC" = '#66c2a5', "PS" = '#fc8d62', "NS" = '#8da0cb'), guide = "none") + # 设置趋势线颜色
-  labs(x = "ITI of role B", y = "Time (ms)", fill = "Participant") + # 设置图例标题
+  scale_color_manual(values = c("HC" = '#66c2a5', "PS" = '#fc8d62', "NS" = '#8da0cb'), guide = "none", breaks=c('HC','PS','NS')) + # 设置趋势线颜色
+  labs(x = "ITI of Role B", y = "Time (ms)", fill = "Participant") + # 设置图例标题
   theme_minimal() + # 使用简洁主题
-theme(panel.grid.major = element_blank(), 
+  theme(panel.grid.major = element_blank(), 
           panel.grid.minor = element_blank(), 
-          legend.position = "right", 
+          legend.position = c(0.85,0.85), 
           axis.line = element_line(linewidth = 0.9, color = "black"), 
           axis.title = element_text(size=14),   
           axis.text = element_text(size=12, color="black"),  
           axis.ticks = element_line(linewidth = 0.9, color = "black")) +
-coord_cartesian (ylim = c (350,550)) +
+geom_rect(aes(xmin=18, xmax=25,ymin=545,ymax=600), fill = 'white', color='white', size=1.5)+
+coord_cartesian (ylim = c (400,600)) +
 scale_x_continuous(breaks = seq(0, 24, 6), labels = seq(0, 24, 6))
 
 #三组填充颜色的折线图
@@ -119,7 +124,7 @@ ggplot(combined_long_mean, aes(x = ITI)) +
   geom_area(data = dplyr::filter(combined_long_mean, Group == "PS"),aes(y = Value, fill = "PS"), alpha = 0.8) +
   geom_area(data = dplyr::filter(combined_long_mean, Group == "NS"),aes(y = Value, fill = "NS"), alpha = 0.8) +
   scale_fill_manual(values = c("HC" = '#66c2a5', "PS" = '#fc8d62', "NS" = '#8da0cb')) +
-  labs(x = "ITI of role B", y = "Time (ms)", fill = "Participant") +
+  labs(x = "ITI of Role B", y = "Time (ms)", fill = "Participant") +
   theme_minimal() +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
@@ -151,12 +156,3 @@ ggplot(combined_long_mean2, aes(x = ITI, y = mean, group = Group, color = Group)
           axis.text = element_text(size=12, color="black"),  
           axis.ticks = element_line(linewidth = 0.9, color = "black")) +
     scale_x_continuous(breaks = c(0, 8, 16, 24))  # 设置横坐标刻度
-
-
-#圈形图
-dataRT$phase_angle <- rep(NA,16)
-for (i in 1:16) {
-    timeseries = hilbert(sin(2 * pi * 0.5 * as.numeric(dataRT[i, 1:24])))
-    dataRT$phase_angle[i] <- atan2(Im(timeseries), Re(timeseries)) * 180 / pi }
-
-

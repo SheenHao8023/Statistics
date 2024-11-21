@@ -3,8 +3,13 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 library(ggprism)
+library(bruceR)
 
 data <- read_excel("C:/Users/ASUS/Desktop/FollowUp.xlsx", col_names = TRUE, sheet = 1)
+MANOVA(data, dvs = "S1C1:S3C3", dvs.pattern = "S(.)C(.)", 
+        between = 'Group', within = c("Session", "Condition"), 
+        ss.type = "III", sph.correction = "GG", aov.include = FALSE, digits = 3,
+        file = 'C:/Users/ASUS/Desktop/Results1.doc')
 
 data_condition <- data %>% select(Group, ends_with("C1"))  # 保留Group列和以C1结尾的列
 data_long <- data_condition %>% 
@@ -62,6 +67,12 @@ ggplot(data_long, aes(x = factor(Group, labels = c('Fix', 'Random')), y = value,
 
                
 data <- read_excel("C:/Users/ASUS/Desktop/FollowUp.xlsx", col_names = TRUE, sheet = 2)
+MANOVA(data, dvs = "S1C1:S3C3", dvs.pattern = "S(.)C(.)", 
+        between = 'Group', within = c("Session", "Condition"), 
+        ss.type = "III", sph.correction = "GG", aov.include = FALSE, digits = 3,
+        file = 'C:/Users/ASUS/Desktop/Results2.doc')
+
+              
 data_condition <- data %>% select(Group, ends_with("C1")) 
 data_long <- data_condition %>% 
   pivot_longer(cols = -Group, names_to = "Condition", values_to = "value")

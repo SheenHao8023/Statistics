@@ -5,40 +5,6 @@ library(ggplot2)
 library(dplyr)
 library(tidyr)
 
-
-#除以三个项目之和
-data <- data.frame( 
-  "A" = c(0.384615385,0.428571429,0.6,0.714285714,0.6,0.428571429,0.6,0.538461538,0.444444444,0.333333333,0.2,0.263157895),
-  "B" = c(0.307692308,0.285714286,0.2,0.142857143,0.2,0.285714286,0.2,0.153846154,0.111111111,0.222222222,0.4,0.421052632),
-  "C" = c(0.307692308,0.285714286,0.2,0.142857143,0.2,0.285714286,0.2,0.307692308,0.444444444,0.444444444,0.4,0.315789474))
-data$Group <- c(rep("Positive", 8), rep("Negative", 4))
-data_long <- data %>%
-  pivot_longer(cols = -Group, names_to = "Metric", values_to = "Value")
-summary_data <- data_long %>%
-  group_by(Metric, Group) %>%
-  summarise(mean = mean(Value), sd = sd(Value), .groups = 'drop')
-levels(summary_data$Metric) <- c("A", "B", "C")
-summary_data$Group <- factor(summary_data$Group, levels = c("Positive", "Negative"))
-data_long$Group <- factor(data_long$Group, levels = c("Positive", "Negative"))
-summary_data$Metric <- factor(summary_data$Metric, levels = c("A", "B", "C"))
-ggplot(summary_data, aes(x = Group, y = mean, fill = Metric)) +
-  geom_bar(stat = "identity", position = position_dodge(width = 0.9), width = 0.7, colour = "black", linewidth = 0) + # 添加黑色边框
-  geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd), width = 0.4, position = position_dodge(width = 0.9), linewidth = 0.7) + # 误差线加粗
-  geom_jitter(data = data_long, aes(x = Group, y = Value, color = Metric), 
-             position = position_jitterdodge(jitter.width = 0.1, dodge.width = 0.7), alpha = 1, size = 1, color = "black") + # 抖动点为黑色
-  scale_fill_manual(values = c('#66c2a5', '#fc8d62','#8da0cb'), name = "Items", labels = c("P1+P3", "N2+N4", "2N1")) + #  "P1+P3", "N2+N4", "N1"
-  scale_x_discrete(labels = c("PS", "NS")) + 
-  coord_cartesian(ylim = c(0, 0.8)) +
-  labs(x = element_blank(), y = "Relative Scores") +
-  theme_minimal() +
-  theme(panel.grid.major = element_blank(), # 移除主要网格线
-        panel.grid.minor = element_blank(), # 移除次要网格线
-        legend.position = "right", # 图例放在右侧
-        axis.line = element_line(linewidth = 0.9, color = "black"), # 黑色坐标轴线
-        axis.title = element_text(size=14),   # 轴标题大小和样式
-        axis.text = element_text(size=12, color="black"),  # 轴文本大小和颜色
-        axis.ticks = element_line(linewidth = 0.9, color = "black")) 
-
 #除以总分
 data <- data.frame( 
   "A" = c(0.084745763,0.09375,0.075,0.136986301,0.065934066,0.090909091,0.095238095,0.12962963,0.125,0.053571429,0.055555556,0.070422535),
@@ -55,60 +21,23 @@ summary_data$Group <- factor(summary_data$Group, levels = c("Positive", "Negativ
 data_long$Group <- factor(data_long$Group, levels = c("Positive", "Negative"))
 summary_data$Metric <- factor(summary_data$Metric, levels = c("A", "B", "C"))
 ggplot(summary_data, aes(x = Group, y = mean, fill = Metric)) +
-  geom_bar(stat = "identity", position = position_dodge(width = 0.9), width = 0.7, colour = "black", linewidth = 0) + # 添加黑色边框
+  geom_bar(stat = "identity", position = position_dodge(width = 0.9), width = 0.7, colour = NA, linewidth = 0) + # 添加黑色边框
   geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd), width = 0.4, position = position_dodge(width = 0.9), linewidth = 0.7) + # 误差线加粗
   geom_jitter(data = data_long, aes(x = Group, y = Value, color = Metric), 
              position = position_jitterdodge(jitter.width = 0.1, dodge.width = 0.7), alpha = 1, size = 1, color = "black") + # 抖动点为黑色
-  scale_fill_manual(values = c('#66c2a5', '#fc8d62','#8da0cb'), name = "Items", labels = c("P1+P3", "N2+N4", "2N1")) + #  "P1+P3", "N2+N4", "N1"
+  scale_fill_manual(values = c('#fc8d62', '#87b5d1' ,'#8da0cb'), name = "Items", labels = c("P1+P3", "N2+N4", "2N1")) + #  "P1+P3", "N2+N4", "N1"
   scale_x_discrete(labels = c("PS", "NS")) + 
   coord_cartesian(ylim = c(0, 0.15)) +
   labs(x = element_blank(), y = "Relative Scores") +
   theme_minimal() +
   theme(panel.grid.major = element_blank(), # 移除主要网格线
         panel.grid.minor = element_blank(), # 移除次要网格线
-        legend.position = "right", # 图例放在右侧
+        legend.position = 'right', # 图例放在右侧
         axis.line = element_line(linewidth = 0.9, color = "black"), # 黑色坐标轴线
         axis.title = element_text(size=14),   # 轴标题大小和样式
         axis.text = element_text(size=12, color="black"),  # 轴文本大小和颜色
         axis.ticks = element_line(linewidth = 0.9, color = "black")) 
 
-#除以三个项目之和
-data <- data.frame(
-  "A" = c(0.384615385,0.428571429,0.6,0.714285714,0.6,0.428571429,0.6,0.538461538,0.444444444,0.333333333,0.2,0.263157895),
-  "B" = c(0.307692308,0.285714286,0.2,0.142857143,0.2,0.285714286,0.2,0.153846154,0.111111111,0.222222222,0.4,0.421052632),
-  "C" = c(0.307692308,0.285714286,0.2,0.142857143,0.2,0.285714286,0.2,0.307692308,0.444444444,0.444444444,0.4,0.315789474))
-data$Group <- c(rep("Positive", 8), rep("Blunted Affect", 2), rep("Withdrawal", 2))
-data_long <- data %>%
-  pivot_longer(cols = -Group, names_to = "Metric", values_to = "Value")
-summary_data <- data_long %>%
-  group_by(Metric, Group) %>%
-  summarise(mean = mean(Value), sd = sd(Value), .groups = 'drop')
-levels(summary_data$Metric) <- c("A", "B", "C")
-summary_data$Group <- factor(summary_data$Group, levels = c("Positive", "Blunted Affect", "Withdrawal"))
-data_long$Group <- factor(data_long$Group, levels = c("Positive",  "Blunted Affect", "Withdrawal"))
-summary_data$Metric <- factor(summary_data$Metric, levels = c("A", "B", "C"))
-ggplot(summary_data, aes(x = Group, y = mean, fill = Metric)) +
-  geom_bar(stat = "identity", position = position_dodge(width = 0.9), width = 0.7, colour = "black", linewidth = 0) + # 添加黑色边框
-  geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd), width = 0.4, position = position_dodge(width = 0.9), linewidth = 0.7) + # 误差线加粗
-  geom_jitter(data = data_long, aes(x = Group, y = Value, color = Metric), 
-             position = position_jitterdodge(jitter.width = 0.1, dodge.width = 0.7), alpha = 1, size = 1, color = "black") + # 抖动点为黑色
-  scale_fill_manual(values = c('#66c2a5', '#fc8d62','#8da0cb'), name = "Items", labels = c("P1+P3", "N2+N4", "2N1")) + # 柔和的颜色
-  scale_x_discrete(labels = c("PS", 'BA', 'WD')) + 
-  coord_cartesian(ylim = c(0, 0.8)) +
-  labs(x = element_blank(), y = "Relative Scores") +
-  theme_minimal() +
-  theme(panel.grid.major = element_blank(), # 移除主要网格线
-        panel.grid.minor = element_blank(), # 移除次要网格线
-        legend.position = "right", # 图例放在右侧
-        axis.line = element_line(linewidth = 0.9, color = "black"), # 黑色坐标轴线
-        axis.title = element_text(size=14),   # 轴标题大小和样式
-        axis.text = element_text(size=12, color="black"),  # 轴文本大小和颜色
-        axis.ticks = element_line(linewidth = 0.9, color = "black")) 
-
-
-
-
-#除以总分
 data <- data.frame( 
   "A" = c(0.084745763,0.09375,0.075,0.136986301,0.065934066,0.090909091,0.095238095,0.12962963,0.125,0.053571429,0.055555556,0.070422535),
   "B" = c(0.06779661,0.0625,0.025,0.02739726,0.021978022,0.060606061,0.031746032,0.037037037,0.03125,0.035714286,0.111111111,0.112676056),
@@ -124,27 +53,22 @@ summary_data$Group <- factor(summary_data$Group, levels = c("Positive", "Blunted
 data_long$Group <- factor(data_long$Group, levels = c("Positive",  "Blunted Affect", "Withdrawal"))
 summary_data$Metric <- factor(summary_data$Metric, levels = c("A", "B", "C"))
 ggplot(summary_data, aes(x = Group, y = mean, fill = Metric)) +
-  geom_bar(stat = "identity", position = position_dodge(width = 0.9), width = 0.7, colour = "black", linewidth = 0) + # 添加黑色边框
+  geom_bar(stat = "identity", position = position_dodge(width = 0.9), width = 0.7, colour = NA, linewidth = 0) + # 添加黑色边框
   geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd), width = 0.4, position = position_dodge(width = 0.9), linewidth = 0.7) + # 误差线加粗
   geom_jitter(data = data_long, aes(x = Group, y = Value, color = Metric), 
              position = position_jitterdodge(jitter.width = 0.1, dodge.width = 0.7), alpha = 1, size = 1, color = "black") + # 抖动点为黑色
-  scale_fill_manual(values = c('#66c2a5', '#fc8d62','#8da0cb'), name = "Items", labels = c("P1+P3", "N2+N4", "2N1")) + # 柔和的颜色
+  scale_fill_manual(values = c('#fc8d62', '#87b5d1' ,'#8da0cb'), name = "Items", labels = c("P1+P3", "N2+N4", "2N1")) + # 柔和的颜色
   scale_x_discrete(labels = c("PS", 'BA', 'WD')) + 
   coord_cartesian(ylim = c(0, 0.15)) +
   labs(x = element_blank(), y = "Relative Scores") +
   theme_minimal() +
   theme(panel.grid.major = element_blank(), # 移除主要网格线
         panel.grid.minor = element_blank(), # 移除次要网格线
-        legend.position = "right", # 图例放在右侧
+        legend.position = 'right', # 图例放在右侧
         axis.line = element_line(linewidth = 0.9, color = "black"), # 黑色坐标轴线
         axis.title = element_text(size=14),   # 轴标题大小和样式
         axis.text = element_text(size=12, color="black"),  # 轴文本大小和颜色
         axis.ticks = element_line(linewidth = 0.9, color = "black")) 
-
-
-
-
-
 
 
 group1 <- 'HC'

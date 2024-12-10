@@ -5,6 +5,33 @@ library(ggplot2)
 library(ggalt)
 library(gsignal)
 
+#flow流程示意插图
+data <- read_excel("C:/Users/ASUS/Desktop/ITI.xlsx", col_names = TRUE, sheet = 5)
+data <- data %>%
+    mutate(Participant = rep(c("HC", "PS", 'NS'), each = 1))
+data_long <- data %>%
+    pivot_longer(cols = ITI1:ITI31, names_to = "ITI", values_to = "Value") %>%
+    mutate(ITI = as.numeric(gsub("ITI", "", ITI)))
+data_summary <- data_long %>%
+    group_by(ITI, Participant) %>%
+    summarise(mean = mean(Value, na.rm = TRUE), .groups = "drop")
+ggplot(data_summary, aes(x = ITI, y = mean, group = Participant, color = Participant)) +
+    geom_line(aes(color = Participant), size = 1.5) +
+    scale_color_manual(values = c("HC" = '#66c2a5', "PS" = '#fc8d62', "NS" = '#8da0cb')) +
+    labs(x = "ITI of Dyads", y = "Time (ms)") +
+    theme_minimal() +
+    theme(panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank(), 
+          legend.position = c(0.85, 0.85), 
+          axis.line = element_line(linewidth = 0.9, color = "black"), 
+          axis.title = element_text(size=14),   
+          axis.text = element_text(size=12, color="black"),  
+          axis.ticks = element_line(linewidth = 0.9, color = "black")) +
+    geom_rect(aes(xmin=25, xmax=32,ymin=530,ymax=570), fill = 'white', color='white', size=1.5)+
+    geom_vline(xintercept = 8, linetype = "dashed", color = "black", size = 0.9) +
+    scale_x_continuous(breaks = c(0, 8, 16, 24, 32))  
+
+
 #ITI 折线图
 data <- read_excel("C:/Users/ASUS/Desktop/ITI.xlsx", col_names = TRUE)
 data <- data %>%

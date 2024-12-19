@@ -2,6 +2,7 @@ library(ggprism)
 library(ggsci)
 library(ggpubr)
 library(ggplot2)
+library(ggforce)
 library(dplyr)
 library(tidyr)
 
@@ -94,14 +95,15 @@ ggplot(data = dat1, mapping = aes(x = factor(group), y = exp, fill = group))+
                geom = "errorbar", width = 0.4, size = 0.7)+ 
   theme_prism(axis_text_angle = 0)+ 
   theme(legend.direction = "vertical",
-    axis.line = element_line(color = 'black', size = 1),
-    axis.ticks = element_line(color = 'black', size = 1),
+    axis.line = element_line(color = 'black', size = 0.75),
+    axis.ticks = element_line(color = 'black', size = 0.75),
     axis.text = element_text(size=12, color="black", face='plain'),  
     axis.title = element_text(size=14, face='plain')) +
   coord_cartesian(ylim = c(0, 1)) +
   scale_fill_manual(values = c('#66c2a5','#fc8d62','#8da0cb', 'transparent', '#e78ac3','#a6d854'))+ 
   scale_x_discrete(breaks = c(group1,group2,group3,group3.1,group3.2), labels=c(group1,group2,group3,group3.1,group3.2))+
-  labs(x=NULL, y="IC")
+  labs(x=NULL, y="IC")+
+  geom_rect(aes(xmin=2.5, xmax=3.5,ymin=-0.02,ymax=0.4), fill = NA, color='black', linetype = 'dashed', size=0.75)
 
 dat2 <- data.frame(group = factor(c(rep(group1,12),rep(group2,8),rep(group3,4),rep(group3.0,1),rep(group3.1,2),rep(group3.2,2)),
   levels = c(group1,group2,group3, group3.0, group3.1, group3.2)),
@@ -119,10 +121,12 @@ ggplot(data = dat2, mapping = aes(x = factor(group), y = exp, fill = group))+
                geom = "errorbar", width = 0.4, size = 0.7)+ 
   theme_prism(axis_text_angle = 0)+ 
   theme(legend.direction = "vertical",
-    axis.text = element_text(size=12, color="black"),  
-    axis.title = element_text(size=14), 
-    plot.title = element_text(hjust = 0.5, size=16)) +
+    axis.line = element_line(color = 'black', size = 0.75),
+    axis.ticks = element_line(color = 'black', size = 0.75),
+    axis.text = element_text(size=12, color="black", face='plain'),  
+    axis.title = element_text(size=14, face='plain')) +
   coord_cartesian(ylim = c(0, 1)) +
   scale_fill_manual(values = c('#66c2a5','#fc8d62','#8da0cb', 'transparent', '#e78ac3','#a6d854'))+ 
   scale_x_discrete(breaks = c(group1,group2,group3,group3.1,group3.2), labels=c(group1,group2,group3,group3.1,group3.2))+
-  labs(x=NULL, y="WS")
+  labs(x=NULL, y="WS")+
+  geom_rect(aes(xmin=2.5, xmax=3.5,ymin=-0.02,ymax=0.65), fill = NA, color='black', linetype = 'dashed', size=0.75)

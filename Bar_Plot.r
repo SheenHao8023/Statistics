@@ -116,7 +116,7 @@ dat2 <- data.frame(group = factor(c(rep(group1,12),rep(group2,8),rep(group3,4),r
           0.423485965362685, 0.248186837930031, 0.537642775384007, 0.588964079608917))
 ggplot(data = dat2, mapping = aes(x = factor(group), y = exp, fill = group))+ 
   stat_summary(fun = "mean",geom = "bar", width = 0.7, colour = NA, size = 0.9)+ 
-  geom_jitter(data = subset(dat1, group!= group3.0), size = 1)+ 
+  geom_jitter(data = subset(dat2, group!= group3.0), size = 1)+ 
   stat_summary(fun = "mean", fun.max = function(x) mean(x) + sd(x), fun.min = function(x) mean(x) - sd(x), 
                geom = "errorbar", width = 0.4, size = 0.7)+ 
   theme_prism(axis_text_angle = 0)+ 

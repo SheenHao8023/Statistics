@@ -89,29 +89,40 @@ dat1 <- data.frame(group = factor(c(rep(group1,12),rep(group2,8),rep(group3,4),r
           0.213138136393294, 0.325858950437347, 0.122370341619107, 0.238565279588251))
 ggplot(data = dat1, mapping = aes(x = factor(group), y = exp, fill = group))+ 
   stat_summary(fun = "mean",geom = "bar", width = 0.7, colour = NA, size = 0.9)+ 
-  geom_jitter(size = 1)+ 
+  geom_jitter(data = subset(dat1, group!= group3.0), size = 1)+ 
   stat_summary(fun = "mean", fun.max = function(x) mean(x) + sd(x), fun.min = function(x) mean(x) - sd(x), 
                geom = "errorbar", width = 0.4, size = 0.7)+ 
   theme_prism(axis_text_angle = 0)+ 
   theme(legend.direction = "vertical",
-    axis.text = element_text(size=12, color="black"),  # 轴文本大小和颜色
-    axis.title = element_text(size=14),   # 轴标题大小和样式
-    plot.title = element_text(hjust = 0.5, size=16)) +
+    axis.line = element_line(color = 'black', size = 1),
+    axis.ticks = element_line(color = 'black', size = 1),
+    axis.text = element_text(size=12, color="black", face='plain'),  
+    axis.title = element_text(size=14, face='plain')) +
   coord_cartesian(ylim = c(0, 1)) +
   scale_fill_manual(values = c('#66c2a5','#fc8d62','#8da0cb', 'transparent', '#e78ac3','#a6d854'))+ 
-  labs(x=element_blank(), y="IC")
+  scale_x_discrete(breaks = c(group1,group2,group3,group3.1,group3.2), labels=c(group1,group2,group3,group3.1,group3.2))+
+  labs(x=NULL, y="IC")
 
-dat2 <- data.frame(group = factor(c(rep(group1,12),rep(group2,8),rep(group3,4)),
-levels = c(group1,group2,group3)),
-exp = c(0.202281279176387, 0.630912927170263, 0.493304878268097, 0.918978968429336, 0.587325895507046, 0.637496186087674, 0.229037385500683, 0.69514316108911, 0.552119687441578, 0.575134538823462, 0.633376077265468, 0.736980635980614, 0.266276389621375, 0.34467419855378, 0.193338418384778, 0.254210502557368, 0.177190082140837, 0.771078858722738, 0.578044979758555, 0.709004680909732, 0.423485965362685, 0.248186837930031, 0.537642775384007, 0.588964079608917))
+dat2 <- data.frame(group = factor(c(rep(group1,12),rep(group2,8),rep(group3,4),rep(group3.0,1),rep(group3.1,2),rep(group3.2,2)),
+  levels = c(group1,group2,group3, group3.0, group3.1, group3.2)),
+  exp = c(0.202281279176387, 0.630912927170263, 0.493304878268097, 0.918978968429336, 
+          0.587325895507046, 0.637496186087674, 0.229037385500683, 0.69514316108911, 
+          0.552119687441578, 0.575134538823462, 0.633376077265468, 0.736980635980614, 
+          0.266276389621375, 0.34467419855378, 0.193338418384778, 0.254210502557368, 
+          0.177190082140837, 0.771078858722738, 0.578044979758555, 0.709004680909732, 
+          0.423485965362685, 0.248186837930031, 0.537642775384007, 0.588964079608917, 0,
+          0.423485965362685, 0.248186837930031, 0.537642775384007, 0.588964079608917))
 ggplot(data = dat2, mapping = aes(x = factor(group), y = exp, fill = group))+ 
   stat_summary(fun = "mean",geom = "bar", width = 0.7, colour = NA, size = 0.9)+ 
-  geom_jitter(size = 1)+ 
+  geom_jitter(data = subset(dat1, group!= group3.0), size = 1)+ 
   stat_summary(fun = "mean", fun.max = function(x) mean(x) + sd(x), fun.min = function(x) mean(x) - sd(x), 
                geom = "errorbar", width = 0.4, size = 0.7)+ 
   theme_prism(axis_text_angle = 0)+ 
-  theme(legend.direction = "vertical") +  
+  theme(legend.direction = "vertical",
+    axis.text = element_text(size=12, color="black"),  
+    axis.title = element_text(size=14), 
+    plot.title = element_text(hjust = 0.5, size=16)) +
   coord_cartesian(ylim = c(0, 1)) +
-  scale_fill_manual(values = mycolors)+ 
-  labs(x=element_blank(), y="WS")
-
+  scale_fill_manual(values = c('#66c2a5','#fc8d62','#8da0cb', 'transparent', '#e78ac3','#a6d854'))+ 
+  scale_x_discrete(breaks = c(group1,group2,group3,group3.1,group3.2), labels=c(group1,group2,group3,group3.1,group3.2))+
+  labs(x=NULL, y="WS")

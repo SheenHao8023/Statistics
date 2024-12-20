@@ -2,7 +2,6 @@ library(ggprism)
 library(ggsci)
 library(ggpubr)
 library(ggplot2)
-library(ggforce)
 library(dplyr)
 library(tidyr)
 

@@ -36,15 +36,10 @@ ggplot(summary_data, aes(x = Group, y = mean, fill = Metric)) +
     axis.text = element_text(size=12, color="black", face='plain'),  
     axis.title = element_text(size=14, face='plain'))
 
-group1 <- 'HC'
-group2 <- 'PS'
-group3 <- 'NS'
-group3.0 <- 'NA'
-group3.1 <- 'BA'
-group3.2 <- 'WD'
+
 #行为学结果图
-dat1 <- data.frame(group = factor(c(rep(group1,12),rep(group2,8),rep(group3,4),rep(group3.0,1),rep(group3.1,2),rep(group3.2,2)),
-  levels = c(group1,group2,group3, group3.0, group3.1, group3.2)),
+dat1 <- data.frame(group = factor(c(rep('HC',12),rep('PS',8),rep('NS',4),rep('NA',1),rep('BA',2),rep('WD',2)),
+  levels = c('HC','PS','NS','NA','BA','WS')),
   exp = c(0.736740518696357, 0.718849142735551, 0.463212981412826, 0.814311576831261, 
           0.675254248541746, 0.753779164191638, 0.365773844835089, 0.496924019273831, 
           0.853665483618762, 0.81992918283153, 0.468329846354709, 0.625123655700655, 
@@ -65,12 +60,12 @@ ggplot(data = dat1, mapping = aes(x = factor(group), y = exp, fill = group))+
     axis.title = element_text(size=14, face='plain')) +
   coord_cartesian(ylim = c(0, 1)) +
   scale_fill_manual(values = c('#66c2a5','#fc8d62','#8da0cb', 'transparent', '#e78ac3','#a6d854'))+ 
-  scale_x_discrete(breaks = c(group1,group2,group3,group3.1,group3.2), labels=c(group1,group2,group3,group3.1,group3.2))+
+  scale_x_discrete(breaks = c('HC','PS','NS','BA','WS'), labels=c('HC','PS','NS','BA','WS'))+
   labs(x=NULL, y="IC")+
   geom_rect(aes(xmin=2.5, xmax=3.5,ymin=-0.02,ymax=0.4), fill = NA, color='black', linetype = 'dashed', size=0.75)
 
-dat2 <- data.frame(group = factor(c(rep(group1,12),rep(group2,8),rep(group3,4),rep(group3.0,1),rep(group3.1,2),rep(group3.2,2)),
-  levels = c(group1,group2,group3, group3.0, group3.1, group3.2)),
+dat2 <- data.frame(group = factor(c(rep('HC',12),rep('PS',8),rep('NS',4),rep('NA',1),rep('BA',2),rep('WD',2)),
+  levels = c('HC','PS','NS','NA','BA','WS')),
   exp = c(0.202281279176387, 0.630912927170263, 0.493304878268097, 0.918978968429336, 
           0.587325895507046, 0.637496186087674, 0.229037385500683, 0.69514316108911, 
           0.552119687441578, 0.575134538823462, 0.633376077265468, 0.736980635980614, 
@@ -91,6 +86,6 @@ ggplot(data = dat2, mapping = aes(x = factor(group), y = exp, fill = group))+
     axis.title = element_text(size=14, face='plain')) +
   coord_cartesian(ylim = c(0, 1)) +
   scale_fill_manual(values = c('#66c2a5','#fc8d62','#8da0cb', 'transparent', '#e78ac3','#a6d854'))+ 
-  scale_x_discrete(breaks = c(group1,group2,group3,group3.1,group3.2), labels=c(group1,group2,group3,group3.1,group3.2))+
+  scale_x_discrete(breaks = c('HC','PS','NS','BA','WS'), labels=c('HC','PS','NS','BA','WS'))+
   labs(x=NULL, y="WS")+
   geom_rect(aes(xmin=2.5, xmax=3.5,ymin=-0.02,ymax=0.65), fill = NA, color='black', linetype = 'dashed', size=0.75)

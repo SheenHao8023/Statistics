@@ -19,10 +19,9 @@ emp_data <- data.frame(group = factor(c(rep(group1,12),rep(group2,8),rep(group3,
           0.254162034711293, 0.522578528601808, 0.47415946082266, 0.63329344053583, 0.310927820260869, 0.349407367664736, 
           0.482001044489097, 0.258375291767164, 0.213138136393294, 0.325858950437347, 0.122370341619107, 0.238565279588251,
           0, 0.213138136393294, 0.325858950437347, 0.122370341619107, 0.238565279588251))
-exp_means <- c(mean(emp_data$exp[emp_data$group == "HC"]),mean(emp_data$exp[emp_data$group == "PS"]),mean(emp_data$exp[emp_data$group == "NS"]),
-               mean(emp_data$exp[emp_data$group == "NA"]),mean(emp_data$exp[emp_data$group == "BA"]),mean(emp_data$exp[emp_data$group == "WD"]))
-exp_sds <- c(sd(emp_data$exp[emp_data$group == "HC"]),sd(emp_data$exp[emp_data$group == "PS"]),sd(emp_data$exp[emp_data$group == "NS"]),
-             sd(emp_data$exp[emp_data$group == "NA"]),sd(emp_data$exp[emp_data$group == "BA"]),sd(emp_data$exp[emp_data$group == "WD"]))
+emp_summary <- emp_data %>%
+  group_by(group) %>%
+  summarise(Mean = mean(exp, na.rm=TRUE), SD=sd(exp, na.rm=TRUE))
 
 #Single shot simulation
 data <- read_excel("C:/Users/ASUS/Desktop/SS.xlsx")
@@ -36,8 +35,8 @@ data_summary <- rbind(data_summary[1:3, ], data.frame(group='NA', mean_bar=0), d
 #plot
 ggplot(data = data_summary, mapping = aes(x = group, y = mean_bar, fill = group)) +
   stat_summary(fun = "mean", geom = "bar", width = 0.7, colour = NA, size = 0) +
-  geom_point(aes(y = exp_means), size = 2, fill = "gray") +
-  geom_errorbar(aes(ymin = exp_means - exp_sds, ymax = exp_means + exp_sds), width = 0.4, size = 0.7, color = "black") +
+  geom_point(data = emp_summary, aes(x = group, y = Mean, fill = group), size = 1) +
+  geom_errorbar(data = emp_summary, aes(x = group, ymin = Mean-SD, ymax =Mean+SD, fill = group), width = 0.4, size = 0.7, color = "black") +
   theme_prism(axis_text_angle = 0) +
   theme(legend.direction = "vertical",
     axis.line = element_line(color = 'black', size = 0.75),

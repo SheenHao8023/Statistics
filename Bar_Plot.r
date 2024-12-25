@@ -20,23 +20,23 @@ levels(summary_data$Metric) <- c("A", "B", "C")
 summary_data$Group <- factor(summary_data$Group, levels = c('PS','NS','NA','BA','WD'))
 data_long$Group <- factor(data_long$Group, levels = c('PS','NS','NA','BA','WD'))
 summary_data$Metric <- factor(summary_data$Metric, levels = c("A", "B", "C"))
-summary_data$sd[is.na(summary_data$sd)] <- 0
 ggplot(summary_data, aes(x = Group, y = mean, fill = Metric)) +
   geom_bar(stat = "identity", position = position_dodge(width = 0.9), width = 0.7, colour = NA) + 
   geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd), width = 0.4, position = position_dodge(width = 0.9), linewidth = 0.7) + 
-  geom_jitter(data = subset(data_long, Group != 'NA'), aes(x = Group, y = Value, color = Metric), 
-              position = position_jitterdodge(jitter.width = 0.1, dodge.width = 0.7), alpha = 1, size = 1) + 
+  geom_jitter(data = subset(data_long, Group != 'NA'), aes(x = Group, y = Value), 
+              position = position_jitterdodge(jitter.width = 0.1, dodge.width = 0.7), alpha = 1, color = 'black', size = 1) + 
   scale_fill_manual(values = c('#fc8d62','#8da0cb','#6495ed'), name = "Items", labels = c("P1+P3", "N2+N4", "2N1")) + 
-  scale_color_manual(values = c('#fc8d62','#8da0cb','#6495ed'), name = "Items") + 
   scale_x_discrete(breaks = c('PS','NS','BA','WD'), labels = c('PS', 'NS', 'BA', 'WD')) + 
   coord_cartesian(ylim = c(0, 0.15)) +
   labs(x = NULL, y = "Relative Scores") +
   theme_minimal() +
   theme(legend.direction = "vertical", legend.position = 'right',
+        panel.grid = element_blank(),
         axis.line = element_line(color = 'black', size = 0.75),
         axis.ticks = element_line(color = 'black', size = 0.75),
         axis.text = element_text(size = 12, color = "black", face = 'plain'),  
-        axis.title = element_text(size = 14, face = 'plain'))
+        axis.title = element_text(size = 14, face = 'plain')) +
+geom_rect(aes(xmin=1.5, xmax=2.5,ymin=-0.005,ymax=0.13), fill = NA, color='black', linetype = 'dashed', size=0.75)
 
 
 #行为学结果IC

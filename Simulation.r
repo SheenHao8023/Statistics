@@ -2,7 +2,6 @@ library(ggprism)
 library(ggplot2)
 library(dplyr)
 library(tidyr)
-library(readxl)
 
 # empirical data
 emp_data <- data.frame(group = factor(c(rep('HC',12),rep('PS',8),rep('NS',4),rep('NA',1),rep('BA',2),rep('WD',2)),
@@ -18,7 +17,7 @@ emp_summary <- emp_data %>%
 emp_summary[4, 3] = 0
 emp_summary$group <- factor(emp_summary$group, levels = c("HC", "PS", "NS", 'NA', "BA", "WD"))
 #Single shot simulation
-data <- read_excel("C:/Users/ASUS/Desktop/simulated_performance_ss24Jan2025.csv")
+data <- read.csv("C:/Users/ASUS/Desktop/simulated_performance_ss24Jan2025.csv")
 data$group <- factor(data$group, levels = c("HC", "PS", "NS", "BA", "WD"))
 data_summary <- data %>%
   filter(group %in% c("HC", "PS", "NS", "BA", "WD")) %>%
@@ -41,7 +40,8 @@ ggplot(data = data_summary, aes(x=group, y=mean_bar, fill=group)) +
   scale_fill_manual(values = c('#66c2a5','#fc8d62','#8da0cb', 'transparent', '#e78ac3','#a6d854'))+ 
   scale_x_discrete(breaks = c("HC", "PS", "NS", "BA", "WD"), labels=c("HC", "PS", "NS", "BA", "WD"))+
   labs(x=NULL, y="IC")+
-  geom_rect(aes(xmin=2.5, xmax=3.5,ymin=-0.02,ymax=0.4), fill = NA, color='black', linetype = 'dashed', size=0.75)
+  geom_rect(aes(xmin=2.5, xmax=3.5,ymin=-0.02,ymax=0.4), fill = NA, color='black', linetype = 'dashed', size=0.75)+
+  geom_rect(aes(xmin=4.5, xmax=6.5,ymin=-0.02,ymax=0.4), fill = NA, color='black', linetype = 'dashed', size=0.75)
 
 
 # WS value
@@ -57,7 +57,7 @@ emp_summary <- emp_data %>%
   summarise(Mean = mean(exp, na.rm=TRUE), SD=sd(exp, na.rm=TRUE))
 emp_summary[4, 3] = 0
 emp_summary$group <- factor(emp_summary$group, levels = c("HC", "PS", "NS", 'NA', "BA", "WD"))
-data <- read_excel("C:/Users/ASUS/Desktop/simulated_performance_ss24Jan2025.csv")
+data <- read.csv("C:/Users/ASUS/Desktop/simulated_performance_ss24Jan2025.csv")
 data$group <- factor(data$group, levels = c("HC", "PS", "NS", "BA", "WD"))
 data_summary <- data %>%
   filter(group %in% c("HC", "PS", "NS", "BA", "WD")) %>%
@@ -79,4 +79,5 @@ ggplot(data = data_summary, aes(x=group, y=mean_bar, fill=group)) +
   scale_fill_manual(values = c('#66c2a5','#fc8d62','#8da0cb', 'transparent', '#e78ac3','#a6d854'))+ 
   scale_x_discrete(breaks = c("HC", "PS", "NS", "BA", "WD"), labels=c("HC", "PS", "NS", "BA", "WD"))+
   labs(x=NULL, y="WS")+
-  geom_rect(aes(xmin=2.5, xmax=3.5,ymin=-0.02,ymax=0.7), fill = NA, color='black', linetype = 'dashed', size=0.75)
+  geom_rect(aes(xmin=2.5, xmax=3.5,ymin=-0.02,ymax=0.7), fill = NA, color='black', linetype = 'dashed', size=0.75)+
+  geom_rect(aes(xmin=4.5, xmax=6.5,ymin=-0.02,ymax=0.7), fill = NA, color='black', linetype = 'dashed', size=0.75)

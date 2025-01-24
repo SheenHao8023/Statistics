@@ -18,7 +18,7 @@ emp_summary <- emp_data %>%
 emp_summary[4, 3] = 0
 emp_summary$group <- factor(emp_summary$group, levels = c("HC", "PS", "NS", 'NA', "BA", "WD"))
 #Single shot simulation
-data <- read_excel("C:/Users/ASUS/Desktop/SS.xlsx")
+data <- read_excel("C:/Users/ASUS/Desktop/simulated_performance_ss24Jan2025.csv")
 data$group <- factor(data$group, levels = c("HC", "PS", "NS", "BA", "WD"))
 data_summary <- data %>%
   filter(group %in% c("HC", "PS", "NS", "BA", "WD")) %>%
@@ -57,7 +57,7 @@ emp_summary <- emp_data %>%
   summarise(Mean = mean(exp, na.rm=TRUE), SD=sd(exp, na.rm=TRUE))
 emp_summary[4, 3] = 0
 emp_summary$group <- factor(emp_summary$group, levels = c("HC", "PS", "NS", 'NA', "BA", "WD"))
-data <- read_excel("C:/Users/ASUS/Desktop/SS.xlsx")
+data <- read_excel("C:/Users/ASUS/Desktop/simulated_performance_ss24Jan2025.csv")
 data$group <- factor(data$group, levels = c("HC", "PS", "NS", "BA", "WD"))
 data_summary <- data %>%
   filter(group %in% c("HC", "PS", "NS", "BA", "WD")) %>%

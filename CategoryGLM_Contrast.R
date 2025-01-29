@@ -135,7 +135,7 @@ generate_scatter_plots <- function(data, group_colors, group_name, outcome_matri
         axis.line = element_line(color = "black"),
         legend.position = "none"  
       ) +
-      labs(title = paste(group_name, "Scatter Plot"),x = predictor, y = sub(".*_", "", group_name))
+      labs(x = predictor, y = sub(".*_", "", group_name))
 
     p <- ggMarginal(p, type = "density", margins = "both", groupColour = TRUE, groupFill = TRUE)
     file_name <- paste0(save_path, "/scatter_", group_name, "_", predictor, ".png")

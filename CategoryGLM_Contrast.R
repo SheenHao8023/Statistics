@@ -91,7 +91,6 @@ print_contrast_results(results_3group_WS)
 print_contrast_results(results_4group_IC)
 print_contrast_results(results_4group_WS)
 
-
 # 定义函数，根据对比结果提取 p 值并生成矩阵
 create_significance_matrix <- function(results, groups, contrasts, vars) {
   significance_matrix <- matrix(0, nrow = length(groups), ncol = length(vars))
@@ -124,6 +123,10 @@ generate_scatter_plots <- function(data, group_colors, group_name, outcome_matri
                   method = "lm", se = FALSE, aes_string(color = "Group")) + 
       scale_color_manual(values = group_colors) +
       theme_minimal(base_family = "sans") +
+      coord_cartesian(
+          ylim = c(0, 1),
+          xlim = if (predictor %in% c("Pr_IC", "Pr_WS")) c(0, 1.50) else c(0, 1)
+      ) +
       theme(
         panel.background = element_rect(fill = "white", color = NA),
         plot.background = element_rect(fill = "white", color = NA),

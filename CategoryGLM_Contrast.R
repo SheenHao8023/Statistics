@@ -114,7 +114,7 @@ matrix_3group_WS <- create_significance_matrix(results_3group_WS, c("HC", "PS", 
 matrix_4group_IC <- create_significance_matrix(results_4group_IC, c("HC", "PS", "BA", "WD"), contrasts_4group, vars)
 matrix_4group_WS <- create_significance_matrix(results_4group_WS, c("HC", "PS", "BA", "WD"), contrasts_4group, vars)
 
-# 4. print scatter plots
+# 4. save scatter plots
 generate_scatter_plots <- function(data, group_colors, group_name, outcome_matrix, save_path) {
   for (predictor in vars) {
     p <- ggplot(data, aes_string(x = predictor, y = sub(".*_", "", group_name), color = "Group")) +
@@ -136,8 +136,14 @@ generate_scatter_plots <- function(data, group_colors, group_name, outcome_matri
         legend.position = "none"  
       ) +
       labs(x = predictor, y = sub(".*_", "", group_name))
-
-    p <- ggMarginal(p, type = "density", margins = "both", groupColour = TRUE, groupFill = TRUE)
+# 5. print slopes
+  for (group in unique(data$Group)) {
+      subset_data <- subset(data, Group == group)
+      model <- lm(as.formula(paste(sub(".*_", "", group_name), "~", predictor)), data = subset_data)
+      slope <- coef(model)[2]  # 提取斜率
+      cat(sprintf("Group: %s, Predictor: %s, Slope: %.4f\n", group, predictor, slope))
+  }
+  p <- ggMarginal(p, type = "density", margins = "both", groupColour = TRUE, groupFill = TRUE)
     file_name <- paste0(save_path, "/scatter_", group_name, "_", predictor, ".png")
     ggsave(file_name, plot = p, width = 5, height = 5, dpi = 300, create.dir = TRUE)
   }

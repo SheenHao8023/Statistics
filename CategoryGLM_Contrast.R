@@ -43,16 +43,23 @@ create_models <- function(data) {
 models1 <- create_models(sub1data)
 models2 <- create_models(sub2data)
 
-# 3. print contrasts
+#3. print contrasts
 extract_contrasts <- function(model, vars, groups, contrasts) {
   results <- list()
   for (var in vars) {
     em <- emtrends(model, var = var, specs = ~ Group)
     contrast_results <- lapply(contrasts, function(c) contrast(em, method = list(c)))
-    results[[var]] <- lapply(contrast_results, summary)
+    summary_results <- lapply(contrast_results, summary)
+    p_values <- sapply(summary_results, function(res) res$p.value)
+    p_values_fdr <- p.adjust(p_values, method = "fdr")
+    for (i in seq_along(summary_results)) {
+      summary_results[[i]]$p.value <- p_values_fdr[i]
+    }
+    results[[var]] <- summary_results
   }
   return(results)
 }
+
 # em_prior_ic <- emtrends(IC_model1, var = "Prior_IC", specs = ~ Group)
 # contrast_prior_ic <- contrast(em_prior_ic, method = list("PS vs NS" = c(0, -1, 1)))
 # em_prior_ws <- emtrends(IC_model1, var = "Prior_WS", specs = ~ Group)

@@ -51,7 +51,7 @@ extract_contrasts <- function(model, vars, groups, contrasts) {
     contrast_results <- lapply(contrasts, function(c) contrast(em, method = list(c)))
     summary_results <- lapply(contrast_results, summary)
     p_values <- sapply(summary_results, function(res) res$p.value)
-    p_values_fdr <- p.adjust(p_values, method = "fdr")
+    p_values_fdr <- p.adjust(p_values, method = "bonferroni")
     for (i in seq_along(summary_results)) {
       summary_results[[i]]$p.value <- p_values_fdr[i]
     }

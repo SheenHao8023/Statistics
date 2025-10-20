@@ -1,0 +1,15 @@
+
+#保存所有打开的figure为png文件到当前路径
+figHandles = findobj('Type', 'figure');  % 找到所有 figure 句柄
+for i = 1:length(figHandles)
+    figure(figHandles(i));  % 激活第 i 个 figure
+    filename = sprintf('figure_%02d.png', i);  % 文件名，例如 figure_01.png
+    saveas(figHandles(i), filename);  % 保存为 PNG
+end
+
+#保存所有打开的figure为fig文件到当前路径
+figHandles = findobj('Type', 'figure');
+for i = 1:length(figHandles)
+    filename = sprintf('figure_%02d.fig', i);
+    savefig(figHandles(i), filename);
+end
